@@ -1,0 +1,258 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shinichi Mogami, August 2017.
+
+\ProvidesPackage{mgmmathtool}
+
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{bm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Abbreviations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% number commands
+\newcommand{\3}{\varepsilon}
+\newcommand{\6}{\partial}
+\newcommand{\7}{\nabla}
+\newcommand{\4}{\Delta}
+\newcommand{\8}{\infty}
+
+\newcommand{\w}{\omega}
+
+% Sets
+\newcommand{\nset}{\mathbb{N}}%自然数の集合
+\newcommand{\nzset}{\mathbb{N}_0}%非負整数の集合
+\newcommand{\nposset}{\mathbb{N}_{\not\in0}}%正の整数の集合
+\newcommand{\zset}{\mathbb{Z}}%整数の集合
+\newcommand{\qset}{\mathbb{Q}}%有理数の集合
+\newcommand{\rset}{\mathbb{R}}%実数の集合
+\newcommand{\cset}{\mathbb{C}}%複素数の集合
+
+\newcommand{\Set}[2]{\left\{#1\mathrel{}\middle|\mathrel{}#2\right\}}
+
+% Logical signs
+\newcommand{\Al}{{}^\forall}
+\newcommand{\Ex}{{}^\exists}
+
+% derivatives
+%\newcommand{\dif}[3][]{\dfrac{d^{#1}{#2}}{d{#3}^{#1}}}
+%\newcommand{\pd}[3][]{\dfrac{\partial^{#1}{#2}}{\partial{#3}^{#1}}}
+
+\def\dif{%
+\@ifstar{\let\mgmd@frac\frac\mgmd@dif@s}%
+{\let\mgmd@frac\dfrac\mgmd@dif@s}%
+}
+\def\mgmd@dif@s{\@ifnextchar[{\mgmd@dif@b}{\mgmd@dif@nb}}
+\def\mgmd@dif@b[#1]#2#3{\mgmd@frac{d^{#1}{#2}}{d{#3}^{#1}}}
+\def\mgmd@dif@nb#1#2{\mgmd@frac{d#1}{d#2}}
+
+\def\pd{%
+\@ifstar{\let\mgmd@frac\frac\mgmd@pd@s}%
+{\let\mgmd@frac\dfrac\mgmd@pd@s}%
+}
+\def\mgmd@pd@s{\@ifnextchar[{\mgmd@pd@b}{\mgmd@pd@nb}}
+\def\mgmd@pd@b[#1]#2#3{\mgmd@frac{\partial^{#1}{#2}}{\partial{#3}^{#1}}}
+\def\mgmd@pd@nb#1#2{\mgmd@frac{\partial#1}{\partial#2}}
+
+%% Brackets
+\newcommand{\p}[1]{\left( #1 \right)}
+%generalized parens
+\def\lessth@n{<}
+\def\greaterth@n{>}
+\def\lr{\@ifstar{\lr@ns\{\}}{\lr@ns}}
+\newcommand{\lr@ns}[3]{
+\def\@l@{#1}\def\@r@{#2}
+\ifx\lessth@n#1\let\@l@\langle\fi
+\ifx\greaterth@n#2\let\@r@\rangle\fi
+\left\@l@#3\right\@r@}
+
+% absolute value, norm of vector
+\def\abs{\@ifstar{\abs@s}{\abs@ns}}
+\def\abs@s#1{\lvert #1 \rvert}
+\def\abs@ns#1{\left\lvert #1 \right\rvert}
+\def\norm{\@ifstar{\norm@s}{\norm@ns}}
+\def\norm@s#1{\lVert #1 \rVert}
+\def\norm@ns#1{\left\lVert #1 \right\rVert}
+
+% definite integral
+\newcommand{\tint}[1]{\left[ \rule{0pt}{2.8ex}#1 \right]}
+
+%%%integrals
+\newcommand{\inti}{\displaystyle\int_{-\infty}^{\infty}}
+\newcommand{\iinti}{\displaystyle\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}}
+
+% complex conjugate
+\newcommand{\ol}{\overline}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Linear Algebra
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%transpose
+%\newcommand{\T}{^{\rule{0pt}{1.4ex}\top}}
+\newcommand{\T}{^{\top}}
+
+% vectors
+
+\newif\ifmgmd@usebmat@
+\mgmd@usebmat@true
+
+\newcommand{\usebmat}{%
+\def\trivec[##1;##2;##3]{{\narrowbaselines\begin{bmatrix}##1\\ ##2\\ ##3\end{bmatrix}}}
+\def\bivec[##1;##2]{{\narrowbaselines\begin{bmatrix}##1\\ ##2\end{bmatrix}}}
+\def\bimat[##1,##2;##3,##4]{{\narrowbaselines\begin{bmatrix}##1&##2\\ ##3&##4\end{bmatrix}}}
+\def\vtr{\@ifstar\h@vec\v@vec}
+\def\h@vec[##1,##2]{\let\mdots\cdots%
+\narrowbaselines%
+\def\an@d{&}%
+\begin{bmatrix}
+\,##1\@for\xx@t:=##2\do{\expandafter\an@d\xx@t}\mbox{\,}
+\end{bmatrix}
+}
+\def\v@vec[##1,##2]{\let\mdots\vdots%
+\narrowbaselines%
+\def\r@turn{\\}%
+\begin{bmatrix}
+##1\@for\xx@t:=##2\do{\expandafter\r@turn\xx@t}
+\end{bmatrix}
+}
+}
+
+\newcommand{\usepmat}{
+\def\trivec[##1;##2;##3]{{\narrowbaselines\begin{pmatrix}##1\\ ##2\\ ##3\end{pmatrix}}}
+\def\bivec[##1;##2]{{\narrowbaselines\begin{pmatrix}##1\\ ##2\end{pmatrix}}}
+\def\bimat[##1,##2;##3,##4]{{\narrowbaselines\begin{pmatrix}##1&##2\\ ##3&##4\end{pmatrix}}}
+\def\vtr{\@ifstar\h@vec\v@vec}
+\def\h@vec[##1,##2]{\let\mdots\cdots%
+\narrowbaselines%
+\def\an@d{&}%
+\begin{pmatrix}
+\,##1\@for\xx@t:=##2\do{\expandafter\an@d\xx@t}\,
+\end{pmatrix}
+}
+\def\v@vec[##1,##2]{\let\mdots\vdots%
+\narrowbaselines%
+\def\r@turn{\\}%
+\begin{pmatrix}
+##1\@for\xx@t:=##2\do{\expandafter\r@turn\xx@t}
+\end{pmatrix}
+}
+}
+
+\usebmat
+
+% imaginary matrix: matrix only box, so useful when you want to tell the matrix size impressively
+\newdimen\h@lf
+\newdimen\h@@lf
+\newdimen\h@ight@name
+\newdimen\h@ight@nrow
+
+\def\letter@s{s}%
+\def\letter@m{m}%
+\def\letter@l{l}%
+\def\letter@ll{ll}
+\def\imatrix@small{1.5}
+\def\imatrix@medium{4.0}
+\def\imatrix@large{7.0}
+\def\imatrix@llarge{10.0}
+
+\newlength{\row@size}
+\newlength{\col@size}
+\def\set@row@size#1{%
+	\def\hoge{#1}%
+	\ifcat\letter@s\hoge%
+	\ifx\hoge\letter@s\setlength{\row@size}{\imatrix@small em}\else\fi%
+	\ifx\hoge\letter@m\setlength{\row@size}{\imatrix@medium em}\else\fi%
+	\ifx\hoge\letter@l\setlength{\row@size}{\imatrix@large em}\else\fi%
+	\else%
+	\setlength{\row@size}{#1em}%
+\fi}
+\def\set@col@size#1{%
+	\def\hoge{#1}%
+	\ifcat\letter@s\hoge%
+	\ifx\hoge\letter@s\setlength{\col@size}{\imatrix@small em}\else\fi%
+	\ifx\hoge\letter@m\setlength{\col@size}{\imatrix@medium em}\else\fi%
+	\ifx\hoge\letter@l\setlength{\col@size}{\imatrix@large em}\else\fi%
+	\else%
+	\setlength{\col@size}{#1em}%
+\fi}
+
+%\imat<height,width>[column number, row number]{matrix name}
+%\imat*<height>[column number]{matrix name} % when square matrix
+
+\def\imat{\@ifstar{\imat@s}{\imat@ns}}
+\def\imat@s{\@ifnextchar<{\imat@s@a}{\imat@s@a<\imatrix@medium>}}
+\def\imat@s@a<#1>{\@ifnextchar[{\imat@s@a@b<#1>}{\imat@s@a@b<#1>[]}}
+\def\imat@s@a@b<#1>[#2]#3{\imat@ns@a@b<#1,#1>[#2,#2]#3}
+\def\imat@ns{\@ifnextchar<{\imat@ns@a}
+	{\imat@ns@a<\imatrix@medium,\imatrix@medium>}}
+\def\imat@ns@a<#1,#2>{\@ifnextchar[{\imat@ns@a@b<#1,#2>}
+	{\imat@ns@a@b<#1,#2>[,]}}
+\def\imat@ns@a@b<#1,#2>[#3,#4]#5{%
+\fboxsep=0pt%
+\set@row@size{#1}%
+\set@col@size{#2}%
+\,\mathord{%
+%\settoheight{\h@ight@name}{$#5$}%
+\h@ight@name=2ex%height of equation M
+\settoheight{\h@ight@nrow}{$#4$}%
+\h@lf=\row@size%
+\h@@lf=\h@lf%
+\advance\h@lf-\h@ight@name%
+\advance\h@@lf\h@ight@name%
+\divide\h@lf2%
+\divide\h@@lf2%
+\advance\h@@lf-\h@ight@nrow%
+\ooalign{\hss\raisebox{\h@@lf}{\scriptsize$#4$}\hss% upper-side small num(column number)
+	\crcr\framebox[\col@size][c]{\rule[-\h@lf]{0pt}{\row@size}$#5$}% framebox imitation
+	\crcr{\hspace{1pt}\scriptsize $#3$}\hss% left-side small num(row number)
+	\crcr\raisebox{-\h@lf}{\relax}% phantom box
+}%
+}\,%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% function
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% sinc function
+\def\sinc{\mathop{\operator@font sinc}\nolimits}
+
+% cosecant function by cosec
+\def\cosec{\mathop{\operator@font cosec}\nolimits}
+
+% sign function
+\def\sgn{\mathop{\operator@font sgn}\nolimits}
+
+% real part and imaginary part
+\let\oldRe\Re
+\let\oldIm\Im
+\def\Re{\mathop{\operator@font Re}\nolimits}
+\def\Im{\mathop{\operator@font Im}\nolimits}
+
+% divergence and rotation
+\renewcommand{\div}{\mathop{\operator@font div}\nolimits}
+\newcommand{\rot}{\mathop{\operator@font rot}\nolimits}
+
+% sign of Fourier transformation twins
+\newcommand{\TtoW}[1][1em]{\fboxsep0pt%
+	\mathrel{\circ\kern-.9pt\hbox{\raise.525ex\hbox{$\rule{#1}{.5pt}$}}%
+	\kern-.9pt\hbox{$\bullet$}}}
+\newcommand{\WtoT}[1][1em]{\fboxsep0pt%
+	\mathrel{\bullet\kern-.9pt\hbox{\raise.525ex\hbox{$\rule{#1}{.5pt}$}}%
+	\kern-.9pt\hbox{$\circ$}}}
+
+% functional
+\def\newfunctional#1#2{%
+	\expandafter\def\csname #1\endcsname{\mathop{#2}\nolimits}
+	\expandafter\def\csname #1\endcsname{%
+		\@ifstar{\csname s@#1\endcsname}{\csname ns@#1\endcsname}}
+	\expandafter\def\csname ns@#1\endcsname{%
+		\@ifnextchar[{\csname op@ns@#1\endcsname}{\csname nop@ns@#1\endcsname}}
+	\expandafter\def\csname op@ns@#1\endcsname[##1]{\mathop{#2}\nolimits\left[{##1}\right]}
+	\expandafter\def\csname nop@ns@#1\endcsname{\mathop{#2}\nolimits}
+	\expandafter\def\csname s@#1\endcsname{%
+		\@ifnextchar[{\csname op@s@#1\endcsname}{\csname nop@s@#1\endcsname}}
+	\expandafter\def\csname op@s@#1\endcsname[##1]{\mathop{{#2}^{-1}}\nolimits\left[{##1}\right]}
+	\expandafter\def\csname nop@s@#1\endcsname{\mathop{{#2}^{-1}}\nolimits}
+}
+\newfunctional{Fou}{\mathcal{F}}
