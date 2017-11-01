@@ -22,8 +22,6 @@
 
 % Sets
 \newcommand{\nset}{\mathbb{N}}%自然数の集合
-\newcommand{\nzset}{\mathbb{N}_0}%非負整数の集合
-\newcommand{\nposset}{\mathbb{N}_{\not\in0}}%正の整数の集合
 \newcommand{\zset}{\mathbb{Z}}%整数の集合
 \newcommand{\qset}{\mathbb{Q}}%有理数の集合
 \newcommand{\rset}{\mathbb{R}}%実数の集合
@@ -40,23 +38,33 @@
 %\newcommand{\pd}[3][]{\dfrac{\partial^{#1}{#2}}{\partial{#3}^{#1}}}
 
 \def\dif{%
-\@ifstar{\let\mgmd@frac\frac\mgmd@dif@s}%
-{\let\mgmd@frac\dfrac\mgmd@dif@s}%
+\@ifstar{\let\mgmm@frac\frac\mgmm@dif@s}%
+{\let\mgmm@frac\dfrac\mgmm@dif@s}%
 }
-\def\mgmd@dif@s{\@ifnextchar[{\mgmd@dif@b}{\mgmd@dif@nb}}
-\def\mgmd@dif@b[#1]#2#3{\mgmd@frac{d^{#1}{#2}}{d{#3}^{#1}}}
-\def\mgmd@dif@nb#1#2{\mgmd@frac{d#1}{d#2}}
+\def\mgmm@dif@s{\@ifnextchar[{\mgmm@dif@b}{\mgmm@dif@nb}}
+\def\mgmm@dif@b[#1]#2#3{\mgmm@frac{d^{#1}{#2}}{d{#3}^{#1}}}
+\def\mgmm@dif@nb#1#2{\mgmm@frac{d#1}{d#2}}
 
 \def\pd{%
-\@ifstar{\let\mgmd@frac\frac\mgmd@pd@s}%
-{\let\mgmd@frac\dfrac\mgmd@pd@s}%
+\@ifstar{\let\mgmm@frac\frac\mgmm@pd@s}%
+{\let\mgmm@frac\dfrac\mgmm@pd@s}%
 }
-\def\mgmd@pd@s{\@ifnextchar[{\mgmd@pd@b}{\mgmd@pd@nb}}
-\def\mgmd@pd@b[#1]#2#3{\mgmd@frac{\partial^{#1}{#2}}{\partial{#3}^{#1}}}
-\def\mgmd@pd@nb#1#2{\mgmd@frac{\partial#1}{\partial#2}}
+\def\mgmm@pd@s{\@ifnextchar[{\mgmm@pd@b}{\mgmm@pd@nb}}
+\def\mgmm@pd@b[#1]#2#3{\mgmm@frac{\partial^{#1}{#2}}{\partial{#3}^{#1}}}
+\def\mgmm@pd@nb#1#2{\mgmm@frac{\partial#1}{\partial#2}}
 
 %% Brackets
-\newcommand{\p}[1]{\left( #1 \right)}
+\def\p{\@ifnextchar[{\mgmm@p@b}{\mgmm@p@nb}}
+\def\mgmm@p@b[#1]#2{\ifcase#1\relax\or%
+(#2)\or%
+\bigl(#2\bigr)\or%
+\Bigl(#2\Bigr)\or%
+\biggl(#2\biggr)\or%
+\Biggl(#2\Biggr)\else%
+\left(\rule{0pt}{#1ex}\right.\!#2\!\left.\rule{0pt}{#1ex}\right)
+\fi}
+\def\mgmm@p@nb#1{\left(#1\right)}
+
 %generalized parens
 \def\lessth@n{<}
 \def\greaterth@n{>}
@@ -85,17 +93,22 @@
 % complex conjugate
 \newcommand{\ol}{\overline}
 
+% pillars: phantom rules for adequate vertical space in math mode
+\newcommand{\fpillar}{\rule[-2.3ex]{0pt}{6ex}}
+\newcommand{\npillar}{\rule[-0.2ex]{0pt}{2.2ex}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Linear Algebra
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %transpose
 %\newcommand{\T}{^{\rule{0pt}{1.4ex}\top}}
 \newcommand{\T}{^{\top}}
+\newcommand{\Ht}{^{\mathsf{H}}}
 
 % vectors
 
-\newif\ifmgmd@usebmat@
-\mgmd@usebmat@true
+\newif\ifmgmm@usebmat@
+\mgmm@usebmat@true
 
 \newcommand{\usebmat}{%
 \def\trivec[##1;##2;##3]{{\narrowbaselines\begin{bmatrix}##1\\ ##2\\ ##3\end{bmatrix}}}
@@ -256,3 +269,5 @@
 	\expandafter\def\csname nop@s@#1\endcsname{\mathop{{#2}^{-1}}\nolimits}
 }
 \newfunctional{Fou}{\mathcal{F}}
+
+\endinput
