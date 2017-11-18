@@ -1,0 +1,408 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgm_theorems}
+
+%%% you can choose style by your purpose: plain, standard(default), fancy
+\newif\ifmgmd@beamer@
+\newif\ifmgmd@plain@
+%\newif\ifIs@standard@
+\newif\ifmgmd@fancy@
+\newif\ifmgmd@ResetbySec@
+\newif\ifmgmd@ResetbyChp@
+\newif\ifmgmd@DependentDefiTheo@
+\newif\ifmgmd@english@
+
+\mgmd@beamer@false
+\mgmd@plain@false
+%\Is@standard@true
+\mgmd@fancy@false
+\mgmd@ResetbySec@false
+\mgmd@ResetbyChp@false
+\mgmd@DependentDefiTheo@false
+\mgmd@english@false
+
+\DeclareOption{beamer}{\mgmd@beamer@true}
+\DeclareOption{plain}{\mgmd@plain@true}
+\DeclareOption{fancy}{\mgmd@fancy@true}
+\DeclareOption{standard}{\mgmd@plain@false\mgmd@fancy@false}
+\DeclareOption{section}{\mgmd@ResetbySec@true}
+\DeclareOption{chapter}{\mgmd@ResetbyChp@true}
+\DeclareOption{dependent}{\mgmd@DependentDefiTheo@true}
+\DeclareOption{english}{\mgmd@english@true}
+\ProcessOptions\relax
+
+
+\ifmgmd@beamer@
+\RequirePackage[beamer]{mgm_boxes}
+\else
+\ifmgmd@fancy@
+\RequirePackage{mgm_boxes}
+\fi
+\RequirePackage{enumitem}
+\fi
+
+\ifmgmd@plain@\ifmgmd@fancy@%
+	\PackageWarningNoLine{mgm_theorems.sty}{%
+	!WARNING! You cannot use `plain' and `fancy' options at the same time.
+	We consider that you chose `plain' option.}
+\else\relax\fi\mgmd@fancy@false
+\else\relax\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Name of def, thm, lem, cor, prp, prf, spf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifmgmd@english@
+	\def\mgmd@def@name{Definition }
+	\def\mgmd@thm@name{Theorem }
+	\def\mgmd@lem@name{Lemma }
+	\def\mgmd@cor@name{Corollary }
+	\def\mgmd@prp@name{Proposition }
+	\def\mgmd@prf@name{Proof}
+	\def\mgmd@spf@name{Short proof}
+\else
+	\def\mgmd@def@name{定義}
+	\def\mgmd@thm@name{定理}
+	\def\mgmd@lem@name{補題}
+	\def\mgmd@cor@name{系}
+	\def\mgmd@prp@name{命題}
+	\def\mgmd@prf@name{証明}
+	\def\mgmd@spf@name{略証}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Counter of def, thm, lem, cor, prp, prf, exam
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifmgmd@beamer@
+\let\c@theorem\relax
+\let\c@definition\relax
+\let\lemma\relax
+\let\endlemma\relax
+\let\proof\relax
+\let\endproof\relax
+\fi
+
+\ifmgmd@plain@\else
+\ifmgmd@DependentDefiTheo@
+
+\ifmgmd@ResetbySec@ % reset counter by section
+	\newcounter{theorem}[section] % thm, def, lem, cor, prp
+	\newcounter{example}[section] % exam
+	\def\thedefinition{\arabic{section}.\arabic{theorem}}
+	\def\thetheorem{\arabic{section}.\arabic{theorem}}
+	\def\thelemma{\arabic{section}.\arabic{theorem}}
+	\def\thecorollary{\arabic{section}.\arabic{theorem}}
+	\def\theproposition{\arabic{section}.\arabic{theorem}}
+	\def\theexample{\arabic{section}.\arabic{example}}
+\else%mgmd@ResetbySec
+\ifmgmd@ResetbyChp@ % reset counter by chapter
+	\newcounter{theorem}[chapter] % thm
+	\newcounter{example}[chapter] % exam
+	\def\thedefinition{\arabic{chapter}.\arabic{theorem}}
+	\def\thetheorem{\arabic{chapter}.\arabic{theorem}}
+	\def\thelemma{\arabic{chapter}.\arabic{theorem}}
+	\def\thecorollary{\arabic{chapter}.\arabic{theorem}}
+	\def\theproposition{\arabic{chapter}.\arabic{theorem}}
+	\def\theexample{\arabic{chapter}.\arabic{example}}
+\else%mgmd@ResetbyChp
+	\newcounter{theorem} % thm
+	\newcounter{example} % exam
+	\def\thedefinition{\arabic{theorem}}
+	\def\thetheorem{\arabic{theorem}}
+	\def\thelemma{\arabic{theorem}}
+	\def\thecorollary{\arabic{theorem}}
+	\def\theproposition{\arabic{theorem}}
+	\def\theexample{\arabic{example}}
+\fi\fi%mgmd@ResetbyChp%mgmd@ResetbySec
+	\def\mgmd@rsc@def{\refstepcounter{theorem}} % refstepcounter
+	\def\mgmd@rsc@lem{\refstepcounter{theorem}}
+	\def\mgmd@rsc@cor{\refstepcounter{theorem}}
+	\def\mgmd@rsc@prp{\refstepcounter{theorem}}
+
+\else%mgmd@DependentDefiTheo
+
+\ifmgmd@ResetbySec@ % reset counter by section
+	\newcounter{theorem}[section] % thm
+	\newcounter{definition}[section] % def
+	\newcounter{lemma}[section] % lem, cor, prp
+	\newcounter{example}[section] % exam
+	\def\thedefinition{\arabic{section}.\arabic{definition}}
+	\def\thetheorem{\arabic{section}.\arabic{theorem}}
+	\def\thelemma{\arabic{section}.\arabic{lemma}}
+	\def\thecorollary{\arabic{section}.\arabic{lemma}}
+	\def\theproposition{\arabic{section}.\arabic{lemma}}
+	\def\theexample{\arabic{section}.\arabic{example}}
+\else%mgmd@ResetbySec
+\ifmgmd@ResetbyChp@ % reset counter by chapter
+	\newcounter{theorem}[chapter] % thm
+	\newcounter{definition}[chapter] % def
+	\newcounter{lemma}[chapter] % lem, cor, prp
+	\newcounter{example}[chapter] % exam
+	\def\thedefinition{\arabic{chapter}.\arabic{definition}}
+	\def\thetheorem{\arabic{chapter}.\arabic{theorem}}
+	\def\thelemma{\arabic{chapter}.\arabic{lemma}}
+	\def\thecorollary{\arabic{chapter}.\arabic{lemma}}
+	\def\theproposition{\arabic{chapter}.\arabic{lemma}}
+	\def\theexample{\arabic{chapter}.\arabic{example}}
+\else%mgmd@ResetbyChp
+	\newcounter{theorem} % thm
+	\newcounter{definition} % def
+	\newcounter{lemma} % lem, cor, prp
+	\newcounter{example} % exam
+	\def\thedefinition{\arabic{definition}}
+	\def\thetheorem{\arabic{theorem}}
+	\def\thelemma{\arabic{lemma}}
+	\def\thecorollary{\arabic{lemma}}
+	\def\theproposition{\arabic{lemma}}
+	\def\theexample{\arabic{example}}
+\fi\fi%mgmd@ResetbyChp%mgmd@ResetbySec
+	\def\mgmd@rsc@def{\refstepcounter{definition}} % refstepcounter
+	\def\mgmd@rsc@lem{\refstepcounter{lemma}}
+	\def\mgmd@rsc@cor{\refstepcounter{lemma}}
+	\def\mgmd@rsc@prp{\refstepcounter{lemma}}
+
+\fi\fi%mgmd@DependentDefiTheo %mgmd@plain
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Commands of def, thm, lem, cor, prp
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\mgmd@relax{\relax}
+
+%%% Commands under here needs to be rewritten. 
+\ifmgmd@plain@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% when `plain' mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifmgmd@DependentDefiTheo@
+
+\ifmgmd@ResetbySec@ % reset counter by section
+	\newcounter{example}[section] % exam
+	\newtheorem{theo}{\mgmd@thm@name}[section]
+	\newtheorem{defi}[theo]{\mgmd@def@name}	
+	\newtheorem{lemma}[theo]{\mgmd@lem@name}	
+	\newtheorem{corol}[theo]{\mgmd@cor@name}
+	\newtheorem{propo}[theo]{\mgmd@prp@name}	
+	\def\theexample{\arabic{section}.\arabic{example}}
+\else%mgmd@ResetbySec
+\ifmgmd@ResetbyChp@ % reset counter by chapter
+	\newcounter{example}[chapter] % exam
+	\newtheorem{theo}{\mgmd@thm@name}[chapter]
+	\newtheorem{defi}[theo]{\mgmd@def@name}
+	\newtheorem{lemma}[theo]{\mgmd@lem@name}
+	\newtheorem{corol}[theo]{\mgmd@cor@name}
+	\newtheorem{propo}[theo]{\mgmd@prp@name}	
+	\def\theexample{\arabic{chapter}.\arabic{example}}
+\else%mgmd@ResetbyChp
+	\newcounter{example} % exam
+	\newtheorem{theo}{\mgmd@thm@name}
+	\newtheorem{defi}[theo]{\mgmd@def@name}
+	\newtheorem{lemma}[theo]{\mgmd@lem@name}
+	\newtheorem{corol}[theo]{\mgmd@cor@name}
+	\newtheorem{propo}[theo]{\mgmd@prp@name}	
+	\def\theexample{\arabic{example}}
+\fi\fi%mgmd@ResetbyChp%mgmd@ResetbySec
+
+\else%mgmd@DependentDefiTheo
+
+\ifmgmd@ResetbySec@ % reset counter by section
+	\newcounter{example}[section] % exam
+	\newtheorem{theo}{\mgmd@thm@name}[section]
+	\newtheorem{defi}{\mgmd@def@name}[section]	
+	\newtheorem{lemma}{\mgmd@lem@name}[section]	
+	\newtheorem{corol}[lemma]{\mgmd@cor@name}
+	\newtheorem{propo}[lemma]{\mgmd@prp@name}	
+	\def\theexample{\arabic{section}.\arabic{example}}
+\else%mgmd@ResetbySec
+\ifmgmd@ResetbyChp@ % reset counter by chapter
+	\newcounter{example}[chapter] % exam
+	\newtheorem{theo}{\mgmd@thm@name}[chapter]
+	\newtheorem{defi}{\mgmd@def@name}[chapter]
+	\newtheorem{lemma}{\mgmd@lem@name}[chapter]
+	\newtheorem{corol}[lemma]{\mgmd@cor@name}
+	\newtheorem{propo}[lemma]{\mgmd@prp@name}	
+	\def\theexample{\arabic{chapter}.\arabic{example}}
+\else%mgmd@ResetbyChp
+	\newcounter{example} % exam
+	\newtheorem{theo}{\mgmd@thm@name}
+	\newtheorem{defi}{\mgmd@def@name}
+	\newtheorem{lemma}{\mgmd@lem@name}
+	\newtheorem{corol}[lemma]{\mgmd@cor@name}
+	\newtheorem{propo}[lemma]{\mgmd@prp@name}	
+	\def\theexample{\arabic{example}}
+\fi\fi%mgmd@ResetbyChp%mgmd@ResetbySec
+
+\fi%mgmd@DependentDefiTheo
+
+\else\ifmgmd@fancy@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% when `fancy' mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\theo{\@ifnextchar[{\theo@b}{\theo@nb}}
+\def\theo@b[#1]{\refstepcounter{theorem}\medskip\par
+\begin{colorboxthm}{\mgmd@thm@name\thetheorem\,【#1】}}
+\def\theo@nb{\refstepcounter{theorem}\medskip\par
+\begin{colorboxthm}{\mgmd@thm@name\thetheorem\;}}
+\def\endtheo{\end{colorboxthm}}
+
+\def\defi{\@ifnextchar[{\defi@b}{\defi@nb}}
+\def\defi@b[#1]{\mgmd@rsc@def%
+\begin{ascolorbox10m}{\textbf{\mgmd@def@name\thedefinition}\,【#1】}}
+\def\defi@nb{\mgmd@rsc@def%
+\begin{ascolorbox10m}{\textbf{\mgmd@def@name\thedefinition\;}}}
+\def\enddefi{\end{ascolorbox10m}}
+
+\def\lemma{\@ifnextchar[{\lemma@b}{\lemma@nb}}
+\def\lemma@b[#1]{\mgmd@rsc@lem\medskip\par
+\begin{colorboxthm}[black!50!white]{\mgmd@lem@name\thelemma\,【#1】}}
+\def\lemma@nb{\mgmd@rsc@lem\medskip\par
+\begin{colorboxthm}[black!50!white]{\mgmd@lem@name\thelemma\;}}
+\def\endlemma{\end{colorboxthm}}
+
+\def\corol{\@ifnextchar[{\corol@b}{\corol@nb}}
+\def\corol@b[#1]{\mgmd@rsc@cor\medskip\par
+\begin{colorboxthm}[black!50!white]{\mgmd@cor@name\thecorollary\,【#1】}[1]}
+\def\corol@nb{\mgmd@rsc@cor\medskip\par
+\begin{colorboxthm}[black!50!white]{\mgmd@cor@name\thecorollary\;}[1]}
+\def\endcorol{\end{colorboxthm}}
+
+\def\propo{\@ifnextchar[{\propo@b}{\propo@nb}}
+\def\propo@b[#1]{\mgmd@rsc@prp\medskip\par
+\begin{colorboxthm}{\mgmd@prp@name\theproposition\,【#1】}[1]}
+\def\propo@nb{\mgmd@rsc@prp\medskip\par
+\begin{colorboxthm}{\mgmd@prp@name\theproposition\;}[1]}
+\def\endpropo{\end{colorboxthm}}
+
+
+\else
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% when `standard' mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{fineleftbar}{%
+  \def\FrameCommand{\textcolor{black}{\vrule width 1.8pt} \hspace{3pt}}% 
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+\newenvironment{sofineleftbar}{%
+  \def\FrameCommand{\textcolor{black}{\vrule width 1.2pt} \hspace{3pt}}% 
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+\newenvironment{finegrayleftbar}{%
+  \def\FrameCommand{\textcolor{Gray}{\vrule width 1.2pt} \hspace{3pt}}% 
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+\newenvironment{theo}[1][]{%
+\refstepcounter{theorem}%
+\begin{fineleftbar}\parindent=0pt%
+\vspace{3pt}\textbf{\mgmd@thm@name\thetheorem}%
+\ifx\mgmd@relax#1\mgmd@relax{\phantom{g}\;}\else{【{#1}】\par}\fi}
+{\vspace{2pt}\end{fineleftbar}}
+
+\newenvironment{defi}[1][]{
+\mgmd@rsc@def% refstepcounter
+\begin{oframed}\parindent=0pt
+\textbf{\mgmd@def@name\thedefinition}\,%
+\ifx\mgmd@relax#1\mgmd@relax\else{【{#1}】}\fi\par}
+{\end{oframed}}
+
+\newenvironment{lemma}[1][]{%
+\mgmd@rsc@lem% refstepcounter
+\begin{sofineleftbar}\parindent=0pt%
+\vspace{3pt}\textbf{\mgmd@lem@name\thelemma}%
+\ifx\mgmd@relax#1\mgmd@relax{\phantom{g}\;}\else{【{#1}】\par}\fi}
+{\vspace{2pt}\end{sofineleftbar}}
+
+\newenvironment{corol}[1][]{%
+\mgmd@rsc@cor% refstepcounter
+\begin{finegrayleftbar}\parindent=0pt
+\vspace{3pt}\textbf{\mgmd@cor@name\thelemma}%
+\ifx\mgmd@relax#1\mgmd@relax{\phantom{g}\;}\else{【{#1}】\par}\fi}
+{\vspace{2pt}\end{finegrayleftbar}}
+
+\newenvironment{propo}[1][]{%
+\mgmd@rsc@prp% refstepcounter
+\begin{sofineleftbar}\parindent=0pt%
+\vspace{3pt}\textbf{\mgmd@prp@name\thelemma}%
+\ifx\mgmd@relax#1\mgmd@relax{\phantom{g}\;}\else{【{#1}】\par}\fi}
+{\vspace{2pt}\end{sofineleftbar}}
+
+\fi\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% exam, proof, shortproof environment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% environment of example
+\newenvironment{exam}
+{\begin{itemize}[label={\bfseries{\large E}x\,{\theexample})\refstepcounter{example}},leftmargin=*]
+\item\relax}{\addtocounter{example}{-1}\end{itemize}}
+
+%%% QED mark
+\def\setqedmark#1{\def\qed@mark{#1}}
+\setqedmark{$\blacksquare$}
+
+%%% proof environment
+\ifmgmd@english@
+\def\mgmd@proofof#1#2{#2 of #1}
+\else
+\def\mgmd@proofof#1#2{#1の#2}
+\fi
+
+\newenvironment{proof}[1][]
+{\list{}{
+\setlength{\listparindent}{0zw}
+\setlength{\itemindent}{0zw}
+\setlength{\parsep}{0.0pt plus 1.0pt}
+}
+\item[\textbf{\ifx\mgmd@relax#1\mgmd@relax%
+\mgmd@prf@name\else{\mgmd@proofof{#1}{\mgmd@prf@name}}\fi.}]
+}{\hfill\qed@mark\endlist}
+
+\expandafter\def\csname proof*\endcsname{\@ifnextchar[{\b@pr@s}{\nb@pr@s}}
+\def\b@pr@s[#1]{\list{}{
+\setlength{\listparindent}{0zw}
+\setlength{\itemindent}{0zw}
+\setlength{\parsep}{0.0pt plus 1.0pt}
+}
+\item[\textbf{\mgmd@proofof{#1}{\mgmd@prf@name}.}]
+}
+\def\nb@pr@s{\list{}{
+\setlength{\listparindent}{0zw}
+\setlength{\itemindent}{0zw}
+\setlength{\parsep}{0.0pt plus 1.0pt}
+}
+\item[\textbf{\mgmd@prf@name.}]
+}
+\expandafter\def\csname endproof*\endcsname{\endlist}
+
+\newenvironment{shortproof}[1][]
+{\list{}{
+\setlength{\listparindent}{0zw}
+\setlength{\itemindent}{0zw}
+\setlength{\parsep}{0.0pt plus 1.0pt}
+}
+\item[\textbf{\ifx\mgmd@relax#1\mgmd@relax%
+\mgmd@spf@name\else{\mgmd@proofof{#1}{\mgmd@spf@name}}\fi.}]
+}{\hfill\qed@mark\endlist}
+
+\expandafter\def\csname shortproof*\endcsname{\@ifnextchar[{\b@spr@s}{\nb@spr@s}}
+\def\b@spr@s[#1]{\list{}{
+\setlength{\listparindent}{0zw}
+\setlength{\itemindent}{0zw}
+\setlength{\parsep}{0.0pt plus 1.0pt}
+}
+\item[\textbf{\mgmd@proofof{#1}{\mgmd@spf@name}.}]
+}
+\def\nb@spr@s{\list{}{
+\setlength{\listparindent}{0zw}
+\setlength{\itemindent}{0zw}
+\setlength{\parsep}{0.0pt plus 1.0pt}
+}
+\item[\textbf{\mgmd@spf@name.}]
+}
+\expandafter\def\csname endshortproof*\endcsname{\endlist}
+
+
+\endinput

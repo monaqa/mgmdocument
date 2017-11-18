@@ -1,0 +1,65 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgmmath_Functions}
+\RequirePackage{amsmath,amssymb}
+
+\newif\ifUse@reim
+\Use@reimtrue
+\DeclareOption{ReIm}{
+\Use@reimtrue
+}
+\DeclareOption{RI}{
+\Use@reimfalse
+}
+\ProcessOptions\relax
+
+% sinc function
+\def\sinc{\mathop{\operator@font sinc}\nolimits}
+
+% cosecant function by cosec
+\def\cosec{\mathop{\operator@font cosec}\nolimits}
+
+
+\def\sgn{\mathop{\operator@font sgn}\nolimits}
+
+% Re and Im in complex number
+\ifUse@reim
+\def\Re{\mathop{\operator@font Re}\nolimits}
+\def\Im{\mathop{\operator@font Im}\nolimits}
+\else\relax\fi
+
+% divergence and rotation
+\renewcommand{\div}{\mathop{\operator@font div}\nolimits}
+\newcommand{\rot}{\mathop{\operator@font rot}\nolimits}
+
+% sign of Fourier transformation twins
+\newcommand{\TtoW}[1][1em]{\fboxsep0pt%
+	\mathrel{\circ\kern-.9pt\hbox{\raise.525ex\hbox{$\rule{#1}{.5pt}$}}%
+	\kern-.9pt\hbox{$\bullet$}}}
+\newcommand{\WtoT}[1][1em]{\fboxsep0pt%
+	\mathrel{\bullet\kern-.9pt\hbox{\raise.525ex\hbox{$\rule{#1}{.5pt}$}}%
+	\kern-.9pt\hbox{$\circ$}}}
+
+%%% new functional command
+%this creates new functional command such as \Fou, \Lap.
+%\Fou: Fourier transformation
+%\Lap: Laplace transformation
+\def\newfunctional#1#2{%
+	\expandafter\def\csname #1\endcsname{\mathop{#2}\nolimits}
+	\expandafter\def\csname #1\endcsname{%
+		\@ifstar{\csname s@#1\endcsname}{\csname ns@#1\endcsname}}
+	\expandafter\def\csname ns@#1\endcsname{%
+		\@ifnextchar[{\csname op@ns@#1\endcsname}{\csname nop@ns@#1\endcsname}}
+	\expandafter\def\csname op@ns@#1\endcsname[##1]{\mathop{#2}\nolimits\left[{##1}\right]}
+	\expandafter\def\csname nop@ns@#1\endcsname{\mathop{#2}\nolimits}
+	\expandafter\def\csname s@#1\endcsname{%
+		\@ifnextchar[{\csname op@s@#1\endcsname}{\csname nop@s@#1\endcsname}}
+	\expandafter\def\csname op@s@#1\endcsname[##1]{\mathop{{#2}^{-1}}\nolimits\left[{##1}\right]}
+	\expandafter\def\csname nop@s@#1\endcsname{\mathop{{#2}^{-1}}\nolimits}
+}
+\newfunctional{Fou}{\mathcal{F}}
+\newfunctional{Lap}{\mathcal{L}}
+
+\endinput

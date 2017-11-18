@@ -1,0 +1,135 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgmmath_LinearAlgebra}
+
+\RequirePackage{amsmath,amssymb}
+
+\newif\ifuse@usebmat@
+\use@usebmat@false
+\DeclareOption{usebmat}{\use@usebmat@true}
+\ProcessOptions\relax
+
+%kernel
+\renewcommand{\ker}{\mathop{\operator@font Ker}\nolimits}
+%image
+\newcommand{\im}{\mathop{\operator@font Im}\nolimits}
+%rank
+\newcommand{\rank}{\mathop{\operator@font rank}\nolimits}
+%transpose
+\newcommand{\T}{^{\rule{0pt}{1.4ex}\top}}
+
+
+%convenient vector style
+% - i think pmatrix/bmatrix does not provide good style...
+\ifuse@usebmat@ %use@usebmat
+\def\trivec[#1;#2;#3]{{\narrowbaselines\begin{bmatrix}#1\\ #2\\ #3\end{bmatrix}}}
+\def\bivec[#1;#2]{{\narrowbaselines\begin{bmatrix}#1\\ #2\end{bmatrix}}}
+\def\bimat[#1,#2;#3,#4]{{\narrowbaselines\begin{bmatrix}#1&#2\\ #3&#4\end{bmatrix}}}
+\def\vtr{\@ifstar\h@vec\v@vec}
+\def\h@vec[#1,#2]{\narrowbaselines%
+\def\an@d{&}%
+\begin{bmatrix}
+\,#1\@for\xx@t:=#2\do{\expandafter\an@d\xx@t}\mbox{\,}
+\end{bmatrix}
+}
+\def\v@vec[#1,#2]{\narrowbaselines%
+\def\r@turn{\\}%
+\begin{bmatrix}
+#1\@for\xx@t:=#2\do{\expandafter\r@turn\xx@t}
+\end{bmatrix}
+}
+\else %use@usebmat
+\def\trivec[#1;#2;#3]{{\narrowbaselines\begin{pmatrix}#1\\ #2\\ #3\end{pmatrix}}}
+\def\bivec[#1;#2]{{\narrowbaselines\begin{pmatrix}#1\\ #2\end{pmatrix}}}
+\def\bimat[#1,#2;#3,#4]{{\narrowbaselines\begin{pmatrix}#1&#2\\ #3&#4\end{pmatrix}}}
+\def\vtr{\@ifstar\h@vec\v@vec}
+\def\h@vec[#1,#2]{\narrowbaselines%
+\def\an@d{&}%
+\begin{pmatrix}
+\,#1\@for\xx@t:=#2\do{\expandafter\an@d\xx@t}\,
+\end{pmatrix}
+}
+\def\v@vec[#1,#2]{\narrowbaselines%
+\def\r@turn{\\}%
+\begin{pmatrix}
+#1\@for\xx@t:=#2\do{\expandafter\r@turn\xx@t}
+\end{pmatrix}
+}
+\fi
+
+
+
+
+%%% imaginary matrix: matrix only box, useful when you want to tell the matrix size so impressively
+\newdimen\h@lf
+\newdimen\h@@lf
+\newdimen\h@ight@name
+\newdimen\h@ight@nrow
+
+\def\letter@s{s}%
+\def\letter@m{m}%
+\def\letter@l{l}%
+\def\letter@ll{ll}
+\def\imatrix@small{1.5}
+\def\imatrix@medium{4.0}
+\def\imatrix@large{7.0}
+\def\imatrix@llarge{10.0}
+
+\newlength{\row@size}
+\newlength{\col@size}
+\def\set@row@size#1{%
+	\def\hoge{#1}%
+	\ifcat\letter@s\hoge%
+	\ifx\hoge\letter@s\setlength{\row@size}{\imatrix@small em}\else\fi%
+	\ifx\hoge\letter@m\setlength{\row@size}{\imatrix@medium em}\else\fi%
+	\ifx\hoge\letter@l\setlength{\row@size}{\imatrix@large em}\else\fi%
+	\else%
+	\setlength{\row@size}{#1em}%
+\fi}
+\def\set@col@size#1{%
+	\def\hoge{#1}%
+	\ifcat\letter@s\hoge%
+	\ifx\hoge\letter@s\setlength{\col@size}{\imatrix@small em}\else\fi%
+	\ifx\hoge\letter@m\setlength{\col@size}{\imatrix@medium em}\else\fi%
+	\ifx\hoge\letter@l\setlength{\col@size}{\imatrix@large em}\else\fi%
+	\else%
+	\setlength{\col@size}{#1em}%
+\fi}
+
+%\imat<height,width>[column number, row number]{matrix name}
+%\imat*<height>[column number]{matrix name} % when square matrix
+
+\def\imat{\@ifstar{\imat@s}{\imat@ns}}
+\def\imat@s{\@ifnextchar<{\imat@s@a}{\imat@s@a<\imatrix@medium>}}
+\def\imat@s@a<#1>{\@ifnextchar[{\imat@s@a@b<#1>}{\imat@s@a@b<#1>[]}}
+\def\imat@s@a@b<#1>[#2]#3{\imat@ns@a@b<#1,#1>[#2,#2]#3}
+\def\imat@ns{\@ifnextchar<{\imat@ns@a}
+	{\imat@ns@a<\imatrix@medium,\imatrix@medium>}}
+\def\imat@ns@a<#1,#2>{\@ifnextchar[{\imat@ns@a@b<#1,#2>}
+	{\imat@ns@a@b<#1,#2>[,]}}
+\def\imat@ns@a@b<#1,#2>[#3,#4]#5{%
+\fboxsep=0pt%
+\set@row@size{#1}%
+\set@col@size{#2}%
+\,\mathord{%
+%\settoheight{\h@ight@name}{$#5$}%
+\h@ight@name=2ex%height of equation M
+\settoheight{\h@ight@nrow}{$#4$}%
+\h@lf=\row@size%
+\h@@lf=\h@lf%
+\advance\h@lf-\h@ight@name%
+\advance\h@@lf\h@ight@name%
+\divide\h@lf2%
+\divide\h@@lf2%
+\advance\h@@lf-\h@ight@nrow%
+\ooalign{\hss\raisebox{\h@@lf}{\scriptsize$#4$}\hss% upper-side small num(column number)
+	\crcr\framebox[\col@size][c]{\rule[-\h@lf]{0pt}{\row@size}$#5$}% framebox imitation
+	\crcr{\hspace{1pt}\scriptsize $#3$}\hss% left-side small num(row number)
+	\crcr\raisebox{-\h@lf}{\relax}% phantom box
+}%
+}\,%
+}
+
+\endinput

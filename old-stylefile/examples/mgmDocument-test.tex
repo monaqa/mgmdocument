@@ -1,0 +1,22 @@
+\documentclass{jsarticle}
+
+\usepackage[bLA]{mgmmath}
+\usepackage{mgmDocument}
+
+\title{mgmDocument.sty test}
+\author{最上伸一}
+
+\begin{document}
+\maketitle
+
+mgmDocument.sty のテスト．
+文書そのものの体裁を変えるようなことは特にしない
+（ただし，geometry パッケージにて，余白などの体裁は多少変更されている）．
+
+\begin{align}
+F(x)&=\inti f(x)dx,\elbl{sore}\\
+G(x)&=\inti g(x)dx.\elbl{na}
+\end{align} 
+なんかいい感じで参照したい．\erefs{sore,na}とか．もしくは\refs[eq]{sore,eq:na}でもよい．
+
+\end{document}

@@ -1,0 +1,166 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, October 2016.
+\ProvidesPackage{mgmDocsNote}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifmgmd@basic@
+\newif\ifmgmd@english@
+\newif\ifmgmd@deluxefonts@
+\newif\ifmgmd@class@
+\newif\ifmgmd@shownext@
+\mgmd@basic@false
+\mgmd@english@false
+\mgmd@deluxefonts@false
+\mgmd@class@true
+\mgmd@shownext@true
+\DeclareOption{basic}{\mgmd@basic@true}
+\DeclareOption{english}{\mgmd@english@true}
+\DeclareOption{dxfonts}{\mgmd@deluxefonts@true}
+\DeclareOption{noclass}{\mgmd@class@false}
+\DeclareOption{class}{\mgmd@class@true}
+\DeclareOption{shownext}{\mgmd@shownext@true}
+\DeclareOption{hidenext}{\mgmd@shownext@false}
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% required package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[dvipdfmx]{graphicx}
+%\RequirePackage{wrapfig}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{bm}
+\RequirePackage[dvipdfmx,usenames]{color}
+%black, white, red, green, blue, cyan, magenta, yellow,Purple,Gray
+\RequirePackage{fancyhdr}
+\RequirePackage{enumitem}
+\RequirePackage{mathtools}%mathtoolsset
+\RequirePackage[hdivide={20mm,,20mm}, vdivide={30mm,,30mm}]{geometry}
+\RequirePackage{siunitx}
+\RequirePackage[dvipdfmx]{hyperref}
+\RequirePackage{pxjahyper}
+\RequirePackage{listings,jlisting}
+\RequirePackage{pgf,tikz}
+\RequirePackage{mathrsfs} % 花文字
+\usetikzlibrary{arrows}
+\RequirePackage{tcolorbox}
+\RequirePackage{varwidth}
+
+\usetikzlibrary{calc}
+\tcbuselibrary{xparse,hooks,skins,breakable}
+
+\ifmgmd@basic@\relax\else
+\RequirePackage{ascmac}
+\RequirePackage{framed}
+\RequirePackage{makeidx}
+\RequirePackage{multicol}
+\RequirePackage{ulem}% uline, uuline, uwave
+\fi
+
+%%% fonts
+\ifmgmd@deluxefonts@
+\usepackage[deluxe]{otf}
+\usepackage[ms-hg]{pxchfon}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mgm sub-packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{mgmmath}
+
+\RequirePackage{mgm_boxes}
+\RequirePackage{mgm_enumerate}
+\RequirePackage{mgm_listings}
+\RequirePackage{mgm_textformat}
+
+\ifmgmd@english@
+\PassOptionsToPackage{english}{mgm_theorems}
+\PassOptionsToPackage{english}{mgm_reference}
+\fi
+\RequirePackage{mgm_theorems}
+\RequirePackage{mgm_reference}
+
+%strong or weak text
+\ifmgmd@deluxefonts@
+\renewcommand{\strong}{\gtfamily\bfseries}
+\newcommand{\Strong}{\gtfamily\ebseries}
+\renewcommand{\weak}{\color{Gray}\mcfamily\ltseries}
+
+%exaggerated text(strong, strong, maybe too strong)
+\renewcommand{\exag}[1]{\textcolor{red}{\gtfamily\mdseries #1}}
+\renewcommand{\Exag}[1]{\textcolor{red}{\mcfamily\bfseries #1}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mathtools settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%when true, references of equations will be displayed only when the labels of them are referred. 
+\mathtoolsset{showonlyrefs=true}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% note commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\today{\number\year/\number\month/\number\day}
+
+\def\subject#1{\def\@subject{#1}}
+\def\yougen#1{\def\y@ugen{#1}}
+\ifmgmd@class@
+  \def\@title{\@subject\, 講義ノート\ifx\y@ugen\undefined{}\else{{\\\large (\y@ugen)}}\fi}
+\else
+  \def\@title{\@subject}
+\fi
+\author{@prime\_{}mgm}
+\date{\today}
+
+\def\classdate{\today}
+
+\ifmgmd@class@
+\newcounter{classcount}
+\def\nextclass#1{\def\classdate{#1}%
+  \refstepcounter{classcount}%
+  \ifmgmd@shownext@
+  \par\noindent\hrulefill （ここから第\theclasscount 回講義:#1）\hrulefill\else\fi
+}
+\def\firstclass#1{\def\classdate{#1}\setcounter{classcount}{1}}
+\else
+\def\nextclass#1{\def\classdate{#1}%
+  \ifmgmd@shownext@
+  \par\medskip\par\noindent\hrulefill （#1）\hrulefill\par\medskip\par\else\fi
+}
+\fi%mgmd@class@
+
+\def\shownextclass{\mgmd@shownext@true}
+\def\hidenextclass{\mgmd@shownext@false}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%header and footer
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\ifmgmd@class@
+  \lhead{\@subject\; 講義ノート\ifx\y@ugen\undefined{}\else{{(\y@ugen)}}\fi}
+  \rhead{\classdate}
+\else
+  \lhead{\@subject}
+\fi
+\cfoot{-\,\thepage\,-}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% other commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%English date in Japanese document
+\newcommand{\fulltoday}{\number\day\space \ifcase\month\or
+  January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi
+  \space\number\year}
+
+\endinput

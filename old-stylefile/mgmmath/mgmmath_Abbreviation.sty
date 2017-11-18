@@ -1,0 +1,66 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgmmath_Abbreviation}
+
+\RequirePackage{amsmath,amssymb}
+
+\newif\ifIhatenumbercomm@nds
+\Ihatenumbercomm@ndsfalse
+\DeclareOption{ihateonlyoneletternumbercommands}{
+\Ihatenumbercomm@ndstrue
+}
+\ProcessOptions\relax
+
+%%%parenthesis
+%paren
+\newcommand{\p}[1]{\left(#1\right)}
+%absolute value
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+%norm
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+%definite integral
+\newcommand{\tint}[1]{\left[ \rule{0pt}{2.8ex}#1 \right]}
+%generalized parens
+\def\lessth@n{<}
+\def\greaterth@n{>}
+\def\lr{\@ifstar{\lr@ns\{\}}{\lr@ns}}
+\newcommand{\lr@ns}[3]{
+\def\@l@{#1}\def\@r@{#2}
+\ifx\lessth@n#1\let\@l@\langle\fi
+\ifx\greaterth@n#2\let\@r@\rangle\fi
+\left\@l@#3\right\@r@}
+
+%overline
+\newcommand{\ol}[1]{\overline{\,{\vphantom{h}}{#1}\,}}
+%circled numbers, alphabets
+\newcommand{\maru}[1]{%
+\raisebox{.2ex}{\textcircled{\hspace{-.3pt}\raisebox{-.3pt}{\footnotesize #1}}}}
+
+%Combinations
+\newcommand{\Comb}[2]{{}_{#1}\mathrm{C}_{#2}}
+%Permutations
+\newcommand{\Perm}[2]{{}_{#1}\mathrm{P}_{#2}}
+%Homogeneous combinations
+\newcommand{\Homo}[2]{{}_{#1}\mathrm{H}_{#2}}
+
+%%% Greek letters and others
+\ifIhatenumbercomm@nds\relax
+\else
+\newcommand{\3}{\varepsilon}
+\newcommand{\6}{\partial}
+\newcommand{\7}{\nabla}
+\newcommand{\4}{\Delta}
+\newcommand{\8}{\infty}
+\fi
+
+\newcommand{\w}{\omega}
+
+
+
+%%%integrals
+\newcommand{\inti}{\displaystyle\int_{-\infty}^{\infty}}
+\newcommand{\iinti}{\displaystyle\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}}
+
+\endinput

@@ -1,0 +1,124 @@
+\documentclass{jsarticle}
+
+%\usepackage[LA,func]{mgmmath}
+\usepackage[dependent,section]{mgm_theorems}
+
+\title{mgm\_\,theorems.sty test}
+\author{最上伸一}
+
+\begin{document}
+\maketitle
+
+mgm\_\,theorems.sty のテスト．
+文書そのものの体裁を変えるようなことは特にしない
+（ただし，geometry パッケージにて，余白などの体裁は多少変更されている）．
+
+\section{用意されている定理環境}
+用意されている定理環境は
+\begin{itemize}
+\item \texttt{defi}：定義 (Definition)
+\item \texttt{theo}：定理 (Theorem)
+\item \texttt{lemma}：補題 (Lemma)
+\item \texttt{corol}：系 (corollary)
+\item \texttt{propo}：命題 (proposition)
+\item \texttt{exam}：例
+\item \texttt{proof}：証明 (Proof)
+\item \texttt{shortproof}：略証 (Short proof)
+\end{itemize} 
+である．カッコ内は英語オプション指定時に表示される名称．
+
+\section{オプションについて}
+\begin{defi}[パッケージオプション]
+\texttt{\yen usepackage[plain]{mgm\_\,theorems}}のように，
+\texttt{usepackage}の直後につける\texttt{plain}などの指定をパッケージオプションという．
+\end{defi}
+\begin{exam}
+\texttt{plain, english, dependent} などはパッケージオプションである．
+\end{exam}
+
+\subsection{スタイルオプション}
+\begin{theo}[スタイルオプション]
+\texttt{plain, standard, fancy} のいずれか1つをオプションに指定すると，
+それに応じて定理環境の類の体裁が変わる．何も指定しなければ，standard とみなされる．
+\end{theo}
+\begin{shortproof}
+実際にやってみるのが早かろう．
+\end{shortproof}
+
+\begin{theo}[English option]
+\texttt{english} オプションを指定すると，定理名が英語表記になる．
+何も指定しなければ日本語表記である．
+\end{theo}
+
+\begin{lemma}[依存パラメータ指定]
+\texttt{dependent} オプションを指定すると，定理環境と定義環境などが連番になる．
+\end{lemma}
+
+\begin{theo}[section によるリセット]
+\texttt{section} オプションを指定すると，定理番号がセクションごとにリセットされるようになる．
+\end{theo}
+
+\begin{corol}[chapter によるリセット]
+\texttt{chapter} オプションを指定すると，チャプターごとにリセットされる．
+\end{corol}
+
+\section{こんな感じ}
+\begin{defi}
+bbb
+\end{defi}
+
+\begin{theo}[nanntyara]
+hettyara
+\end{theo}
+
+\begin{proof}
+証明はこのように．
+
+行が変わってもほら，この通り．
+\end{proof}
+
+\begin{defi}[aaa]
+bbb
+\end{defi}
+
+\begin{exam}
+なんとかかんとか
+\item ほにゃほにゃ
+\end{exam}
+
+\section{章が変わって}
+\begin{defi}
+bbb
+\end{defi}
+
+\begin{theo}[ピタゴラス]
+
+\end{theo}
+
+\begin{lemma}
+補題です
+\end{lemma}
+
+\begin{shortproof}[補題]
+簡単．
+\end{shortproof}
+
+\begin{proof}[ピタゴラスの定理]
+三平方の定理より明らかであろう．
+
+三平方の定理は三平方の定理である．
+\end{proof}
+
+\begin{corol}
+こんな風に
+\end{corol}
+
+\begin{propo}
+こんな感じの命題
+\end{propo}
+
+
+
+
+
+\end{document}

@@ -1,0 +1,37 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgm_textformat}
+
+\newif\ifmgmd@beamer@
+\mgmd@beamer@false
+\DeclareOption{beamer}{\mgmd@beamer@true}
+\ProcessOptions\relax
+
+\ifmgmd@beamer@\else
+\RequirePackage[dvipdfmx,usenames]{color}
+\fi
+
+%colored text (you can use this command for equations as well as plain texts)
+\newcommand{\rc}[1]{\textcolor{red}{#1}}
+\newcommand{\bc}[1]{\textcolor{blue}{#1}}
+\newcommand{\wc}[1]{\textcolor{white}{#1}}
+
+\ifmgmd@beamer@\else
+\newcommand{\pc}[1]{\textcolor{Purple}{#1}}
+\newcommand{\gc}[1]{\textcolor{Gray}{#1}}
+\fi
+
+%strong or weak text
+\newcommand{\strong}{\bfseries}
+\ifmgmd@beamer@\else
+\newcommand{\weak}{\color{Gray}}
+\fi
+
+%exaggerated text(strong, strong, maybe too strong)
+\newcommand{\exag}[1]{\textcolor{red}{#1}}
+\newcommand{\Exag}[1]{\textcolor{red}{\textbf{#1}}}
+
+
+\endinput

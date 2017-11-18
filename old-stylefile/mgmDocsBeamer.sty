@@ -1,0 +1,95 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, October 2016.
+\ProvidesPackage{mgmDocsBeamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifmgmd@basic@
+\newif\ifmgmd@english@
+\newif\ifmgmd@deluxefonts@
+\mgmd@basic@false
+\mgmd@english@false
+\mgmd@deluxefonts@false
+\DeclareOption{basic}{\mgmd@basic@true}
+\DeclareOption{english}{\mgmd@english@true}
+\DeclareOption{dxfonts}{\mgmd@deluxefonts@true}
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% required package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{bm}
+\RequirePackage{mathtools}%mathtoolsset
+\RequirePackage{siunitx}
+\RequirePackage{pxjahyper}
+\RequirePackage{listings,jlisting}
+\RequirePackage{pgf,tikz}
+\RequirePackage{mathrsfs} % 花文字
+\usetikzlibrary{arrows}
+\RequirePackage{tcolorbox}
+\RequirePackage{varwidth}
+
+\usetikzlibrary{calc}
+\tcbuselibrary{xparse,hooks,skins,breakable}
+
+\ifmgmd@basic@\relax\else
+\RequirePackage{ascmac}
+\RequirePackage{framed}
+\RequirePackage{makeidx}
+\RequirePackage{multicol}
+\RequirePackage{ulem}% uline, uuline, uwave
+\fi
+
+%%% fonts
+\ifmgmd@deluxefonts@
+\usepackage[deluxe]{otf}
+\usepackage[ms-hg]{pxchfon}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mgm sub-packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{mgmmath}
+
+\RequirePackage{mgm_listings}
+\RequirePackage[beamer]{mgm_textformat}
+
+\ifmgmd@english@
+\PassOptionsToPackage{english}{mgm_theorems}
+\PassOptionsToPackage{english}{mgm_reference}
+\fi
+\RequirePackage[beamer]{mgm_theorems}
+\RequirePackage[beamer]{mgm_reference}
+
+%strong or weak text
+\ifmgmd@deluxefonts@
+\renewcommand{\strong}{\gtfamily\bfseries}
+\newcommand{\Strong}{\gtfamily\ebseries}
+
+%exaggerated text(strong, strong, maybe too strong)
+\renewcommand{\exag}[1]{\textcolor{red}{\gtfamily\mdseries #1}}
+\renewcommand{\Exag}[1]{\textcolor{red}{\mcfamily\bfseries #1}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mathtools settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%when true, references of equations will be displayed only when the labels of them are referred. 
+\mathtoolsset{showonlyrefs=true}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% other commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%English date in Japanese document
+\newcommand{\fulltoday}{\number\day\space \ifcase\month\or
+  January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi
+  \space\number\year}
+\endinput

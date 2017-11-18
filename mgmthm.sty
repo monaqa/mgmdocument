@@ -1,0 +1,130 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{mgmthm}
+
+\newif\ifmgmd@fancy@
+
+\newif\ifmgmd@common@
+
+\newif\ifmgmd@english@
+
+\DeclareOption{plain}{\mgmd@fancy@false}
+\DeclareOption{fancy}{\mgmd@fancy@true}
+\DeclareOption{common}{\mgmd@common@true}
+\DeclareOption{english}{\mgmd@english@true}
+
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Name of def, thm, lem, cor, prp, prf, spf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifmgmd@english@
+	\def\mgmd@def@name{Definition~}
+	\def\mgmd@thm@name{Theorem~}
+	\def\mgmd@lem@name{Lemma~}
+	\def\mgmd@cor@name{Corollary~}
+	\def\mgmd@prp@name{Proposition~}
+	\def\mgmd@prf@name{Proof}
+	\def\mgmd@spf@name{Short proof}
+\else
+	\def\mgmd@def@name{定義}
+	\def\mgmd@thm@name{定理}
+	\def\mgmd@lem@name{補題}
+	\def\mgmd@cor@name{系}
+	\def\mgmd@prp@name{命題}
+	\def\mgmd@prf@name{証明}
+	\def\mgmd@spf@name{略証}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Counter of def, thm, lem, cor, prp, prf, exam
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifmgmd@beamer@
+\let\c@theorem\relax
+\let\c@definition\relax
+\let\lemma\relax
+\let\endlemma\relax
+\let\proof\relax
+\let\endproof\relax
+\fi
+
+\ifmgmd@plain@\else
+\ifmgmd@DependentDefiTheo@
+
+\ifmgmd@ResetbySec@ % reset counter by section
+	\newcounter{theorem}[section] % thm, def, lem, cor, prp
+	\newcounter{example}[section] % exam
+	\def\thedefinition{\arabic{section}.\arabic{theorem}}
+	\def\thetheorem{\arabic{section}.\arabic{theorem}}
+	\def\thelemma{\arabic{section}.\arabic{theorem}}
+	\def\thecorollary{\arabic{section}.\arabic{theorem}}
+	\def\theproposition{\arabic{section}.\arabic{theorem}}
+	\def\theexample{\arabic{section}.\arabic{example}}
+\else%mgmd@ResetbySec
+\ifmgmd@ResetbyChp@ % reset counter by chapter
+	\newcounter{theorem}[chapter] % thm
+	\newcounter{example}[chapter] % exam
+	\def\thedefinition{\arabic{chapter}.\arabic{theorem}}
+	\def\thetheorem{\arabic{chapter}.\arabic{theorem}}
+	\def\thelemma{\arabic{chapter}.\arabic{theorem}}
+	\def\thecorollary{\arabic{chapter}.\arabic{theorem}}
+	\def\theproposition{\arabic{chapter}.\arabic{theorem}}
+	\def\theexample{\arabic{chapter}.\arabic{example}}
+\else%mgmd@ResetbyChp
+	\newcounter{theorem} % thm
+	\newcounter{example} % exam
+	\def\thedefinition{\arabic{theorem}}
+	\def\thetheorem{\arabic{theorem}}
+	\def\thelemma{\arabic{theorem}}
+	\def\thecorollary{\arabic{theorem}}
+	\def\theproposition{\arabic{theorem}}
+	\def\theexample{\arabic{example}}
+\fi\fi%mgmd@ResetbyChp%mgmd@ResetbySec
+	\def\mgmd@rsc@def{\refstepcounter{theorem}} % refstepcounter
+	\def\mgmd@rsc@lem{\refstepcounter{theorem}}
+	\def\mgmd@rsc@cor{\refstepcounter{theorem}}
+	\def\mgmd@rsc@prp{\refstepcounter{theorem}}
+
+\else%mgmd@DependentDefiTheo
+
+\ifmgmd@ResetbySec@ % reset counter by section
+	\newcounter{theorem}[section] % thm
+	\newcounter{definition}[section] % def
+	\newcounter{lemma}[section] % lem, cor, prp
+	\newcounter{example}[section] % exam
+	\def\thedefinition{\arabic{section}.\arabic{definition}}
+	\def\thetheorem{\arabic{section}.\arabic{theorem}}
+	\def\thelemma{\arabic{section}.\arabic{lemma}}
+	\def\thecorollary{\arabic{section}.\arabic{lemma}}
+	\def\theproposition{\arabic{section}.\arabic{lemma}}
+	\def\theexample{\arabic{section}.\arabic{example}}
+\else%mgmd@ResetbySec
+\ifmgmd@ResetbyChp@ % reset counter by chapter
+	\newcounter{theorem}[chapter] % thm
+	\newcounter{definition}[chapter] % def
+	\newcounter{lemma}[chapter] % lem, cor, prp
+	\newcounter{example}[chapter] % exam
+	\def\thedefinition{\arabic{chapter}.\arabic{definition}}
+	\def\thetheorem{\arabic{chapter}.\arabic{theorem}}
+	\def\thelemma{\arabic{chapter}.\arabic{lemma}}
+	\def\thecorollary{\arabic{chapter}.\arabic{lemma}}
+	\def\theproposition{\arabic{chapter}.\arabic{lemma}}
+	\def\theexample{\arabic{chapter}.\arabic{example}}
+\else%mgmd@ResetbyChp
+	\newcounter{theorem} % thm
+	\newcounter{definition} % def
+	\newcounter{lemma} % lem, cor, prp
+	\newcounter{example} % exam
+	\def\thedefinition{\arabic{definition}}
+	\def\thetheorem{\arabic{theorem}}
+	\def\thelemma{\arabic{lemma}}
+	\def\thecorollary{\arabic{lemma}}
+	\def\theproposition{\arabic{lemma}}
+	\def\theexample{\arabic{example}}
+\fi\fi%mgmd@ResetbyChp%mgmd@ResetbySec
+	\def\mgmd@rsc@def{\refstepcounter{definition}} % refstepcounter
+	\def\mgmd@rsc@lem{\refstepcounter{lemma}}
+	\def\mgmd@rsc@cor{\refstepcounter{lemma}}
+	\def\mgmd@rsc@prp{\refstepcounter{lemma}}
+
+\fi\fi%mgmd@DependentDefiTheo %mgmd@plain

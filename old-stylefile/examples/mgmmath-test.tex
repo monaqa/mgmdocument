@@ -1,0 +1,59 @@
+\documentclass{jsarticle}
+
+\usepackage[bLA,func]{mgmmath}
+
+\title{mgmmath.sty test}
+\author{最上伸一}
+
+\begin{document}
+\maketitle
+
+mgmmath.sty のテスト．
+
+mgmmath.sty の概要を以下に述べる．
+\begin{itemize}
+\item Basic characteristics：$\fpillar\dif yx$などのコマンドが使える．
+\item Sets：$\rset$やら$\nposset,\nzset$などの集合を書きやすくした自由なコマンドを集めたもの．
+\item Abbreviation：省略形を集めたもの．$\6$や括弧の省略$\p{x+\dfrac12}$，さらには
+\begin{align}
+\inti f(x)dx
+\end{align}
+など，多岐にわたる便利な省略コマンド．
+\item LA：オプション．線形代数．pLAオプションも同じ意味．\texttt{\yen vtr}コマンドは，
+縦ベクトルを簡単に書きたいときに便利．
+\begin{align}
+\imat{A}\imat<m,s>{\bm x}=\vtr[1,2,3]
+\end{align}
+{こういうこと}もできる．
+
+\item bLA：オプション．LAとほぼ同じだが，行列やベクトルを表すコマンドが角括弧になる．
+pLA(LA) と bLA を同時に呼び出したときは bLA が優先されるが，
+片方のみ呼び出すことを想定して作っている．
+
+\item func：オプション．Fourier 変換$\Fou[f]$や$\sinc$関数，$\div \bm A,\rot \bm B$などが使える．
+\end{itemize}
+
+以下，それらの詳細を述べる．
+\section{Basic characteristics}
+\begin{itemize}
+\item 微分演算子を楽に打つコマンド：\texttt{\yen dif[2]\{y\}\{x\},\yen pd[2]\{z\}\{x\}}.
+dif は常微分を，pdは偏微分を表示する．
+\begin{align}
+\dif{y}{x},\;\;\pd[2]{z}{x}
+\end{align}
+などのように使う．
+残念ながら，このコマンドには現在$\dfrac{\6^2z}{\6x\6y}$といった，
+異なる変数による偏微分を表示する機能はついていない．
+これらの場合は，後述する Abbreviation のコマンドを用いれば多少楽に打てる．
+
+\end{itemize}
+\begin{tabular}{lll}
+\hline
+たとえば&こんな&ときに\\\hline\hline
+このように&分数$\dfrac12$が&詰まる\\\hline
+このように&分数$\fpillar\dfrac12$が&詰まらない\\\hline
+このように&分数$\dfrac12$が&詰まる\\\hline
+\end{tabular} 
+
+
+\end{document}

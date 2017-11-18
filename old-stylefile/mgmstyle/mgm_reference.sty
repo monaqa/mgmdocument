@@ -1,0 +1,107 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgm_reference}
+
+\newif\ifmgmd@beamer@
+\mgmd@beamer@false
+\DeclareOption{beamer}{\mgmd@beamer@true}
+\ProcessOptions\relax
+
+\ifmgmd@beamer@\else
+\RequirePackage[dvipdfmx]{hyperref}
+\fi
+
+\newif\ifmgmd@english@
+\mgmd@english@false
+\DeclareOption{english}{\mgmd@english@true}
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%hyperrefs
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifmgmd@beamer@\else
+\hypersetup{% hyperrefオプションリスト
+draft=false,
+bookmarks=true,
+pdfauthor={Shin-ichi Mogami},
+%pdfsubject={},
+setpagesize=false,
+bookmarksnumbered=true,%
+bookmarksopen=true,%
+colorlinks=true,%
+linkcolor=MidnightBlue,
+citecolor=Brown,
+filecolor=Violet,
+urlcolor=RedViolet
+}
+\def\pdfkeywords#1{\hypersetup{pdfkeywords={#1}}}
+\def\showlinks{\hypersetup{draft=false}}
+\def\nolinks{\hypersetup{draft=true}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%
+%reference
+%%%%%%%%%%%%%%%%%%%%%%
+% I gave up using package cleveref.
+
+% setlabelsname command
+\newcommand{\setlabelsname}[3]{%
+\expandafter\def\csname mgmd@pre@#1@label\endcsname{#2}%
+\expandafter\def\csname mgmd@post@#1@label\endcsname{#3}%
+}
+
+\ifmgmd@english@
+\setlabelsname{eq}{eq. }{}
+\setlabelsname{fig}{figure }{}
+\setlabelsname{tab}{table }{}
+\setlabelsname{sec}{section }{}
+\setlabelsname{sse}{subsection }{}
+\else
+\setlabelsname{eq}{}{式}
+\setlabelsname{fig}{図}{}
+\setlabelsname{tab}{表}{}
+\setlabelsname{sec}{第}{章}
+\setlabelsname{sse}{}{節}
+\fi
+
+%whitespace
+\setlabelsname{}{\relax}{\relax}
+
+\newcommand{\elbl}[1]{\label{eq:#1}}
+\newcommand{\flbl}[1]{\label{fig:#1}}
+\newcommand{\tlbl}[1]{\label{tab:#1}}
+
+\newcounter{mgmd@refcount}
+\newcommand{\refs}[2][]{
+	\setcounter{mgmd@refcount}{0}%
+	\csname mgmd@pre@#1@label\endcsname%
+	\@for\x@t:=#1\do{\ifnum\c@mgmd@refcount<1{{\stepcounter{mgmd@refcount}}}\else{,\ }\fi%
+		\ref{\x@t}}%
+	\csname mgmd@post@#1@label\endcsname%
+}
+
+% If you want to do \refs[eq]{eq:exam1,eq:exam2}, you can type \erefs{exam1,exam2} instead.
+\def\erefs#1{%
+%	\newcounter{mgmd@refcount}%
+	\setcounter{mgmd@refcount}{0}%
+	\mgmd@pre@eq@label%
+	\@for\x@t:=#1\do{\ifnum\c@mgmd@refcount<1{{\stepcounter{mgmd@refcount}}}\else{,\ }\fi%
+		\eqref{eq:\x@t}}%
+	\mgmd@post@eq@label%
+}
+
+\def\frefs#1{%
+%	\newcounter{mgmd@refcount}%
+	\setcounter{mgmd@refcount}{0}%
+	\mgmd@pre@fig@label%
+	\@for\x@t:=#1\do{\ifnum\c@mgmd@refcount<1{{\stepcounter{mgmd@refcount}}}\else{,\ }\fi%
+		\ref{fig:\x@t}}%
+	\mgmd@post@fig@label%
+}
+
+
+
+\endinput

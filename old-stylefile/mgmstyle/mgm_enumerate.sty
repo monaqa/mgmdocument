@@ -1,0 +1,31 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgm_enumerate}
+
+\newif\ifmgmd@beamer@
+\mgmd@beamer@false
+\DeclareOption{beamer}{\mgmd@beamer@true}
+\ProcessOptions\relax
+
+\ifmgmd@beamer@\else
+\RequirePackage{enumitem}
+\fi
+
+%%%[[[easy enumitem commands]]]
+%%%you cannot use these in class where enumitem style file is not allowed, such as beamer. 
+%numbering (1),(2),(3),...
+\newenvironment{enumparen}{\begin{enumerate}[label=(\arabic*)]}{\end{enumerate}}
+%numbering (i),(ii),(iii),...
+\newenvironment{enumpareni}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+%numbering 問1.,問2.,問3.,...
+\newenvironment{enumtoi}{\begin{enumerate}[label={\textbf{問{\arabic*}.}}]%
+\setlength{\itemsep}{4pt}}{\end{enumerate}}
+%numbering 問題1.,問題2.,問題3.,...
+\newenvironment{enummondai}{\begin{enumerate}[label={\textbf{問題{\arabic*}.}}]%
+\setlength{\itemsep}{4pt}}{\end{enumerate}}
+%numbering 解答1.,解答2.,解答3.,...
+\newenvironment{enumkaitou}{\begin{enumerate}[label={\textbf{解答{\arabic*}.}}]}{\end{enumerate}}
+
+\endinput

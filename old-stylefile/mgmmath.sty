@@ -1,0 +1,57 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgmmath}
+
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{bm}
+
+\RequirePackage{mgmmath_Abbreviation}
+\RequirePackage{mgmmath_Sets}
+
+\newif\ifuse@func@
+\newif\ifuse@LA@
+\newif\ifuse@usebmat@
+\use@func@false
+\use@LA@false
+\use@usebmat@false
+\DeclareOption{func}{\use@func@true}
+\DeclareOption{LA}{\use@LA@true}
+\DeclareOption{pLA}{\use@LA@true}
+\DeclareOption{bLA}{\use@usebmat@true}
+\ProcessOptions\relax
+
+%\ExecuteOptions{func,LA}
+\ifuse@func@
+\RequirePackage{mgmmath_Functions}
+\else\relax\fi
+\ifuse@usebmat@
+\PassOptionsToPackage{usebmat}{mgmmath_LinearAlgebra}
+%\RequirePackage{mgmmath_LinearAlgebra}
+\else\relax\fi
+\ifuse@LA@
+\RequirePackage{mgmmath_LinearAlgebra}
+\else\relax\fi
+\RequirePackage{mgmmath_LinearAlgebra}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% basic commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%[[[derivatives]]]
+\newcommand{\dif}[3][]{\dfrac{d^{#1}{#2}}{d{#3}^{#1}}}
+\newcommand{\pd}[3][]{\dfrac{\partial^{#1}{#2}}{\partial{#3}^{#1}}}
+
+%%%[[[pillars: for adequate vertical space in math mode]]]
+\newcommand{\fpillar}{\rule[-2.3ex]{0pt}{6ex}}
+\newcommand{\npillar}{\rule[-0.2ex]{0pt}{2.2ex}}
+
+%%%[[[mfrac: my frac]]]
+\newcommand{\mfrac}[2]{\mathchoice{\frac{#1}{#2}}{\dfrac{#1}{#2}}{#1/#2}{#1/#2}}
+%\def\mfrac{\@ifstar{\mgmd@mfrac@s}{\mgmd@mfrac@ns}}
+%\def\mgmd@mfrac@s#1#2{%
+%\mathchoice{\frac{#1}{#2}}{\dfrac{#1}{#2}}{#1/#2}{#1/#2}}
+%\def\mgmd@mfrac@ns#1#2{\mathchoice{\frac{#1}{#2}}{\dfrac{#1}{#2}}{#1/#2}{#1/#2}}
+
+\endinput

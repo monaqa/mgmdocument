@@ -1,0 +1,367 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+\ProvidesPackage{mgmDocsAnswer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifmgmd@basic@
+%\newif\ifmgmd@english@
+\mgmd@basic@false
+%\mgmd@english@false
+\DeclareOption{basic}{\mgmd@basic@true}
+%\DeclareOption{english}{\mgmd@english@true}
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% required package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[dvipdfmx]{graphicx}
+%\RequirePackage{wrapfig}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{bm}
+\RequirePackage[dvipdfmx,usenames]{color}
+%black, white, red, green, blue, cyan, magenta, yellow,Purple,Gray
+\RequirePackage{fancyhdr}
+\RequirePackage{enumitem}
+\RequirePackage{mathtools}%mathtoolsset
+\RequirePackage[hdivide={20mm,,20mm}, vdivide={30mm,,30mm}]{geometry}
+\RequirePackage{siunitx}
+\RequirePackage[dvipdfmx]{hyperref}
+\RequirePackage{pxjahyper}
+\RequirePackage{listings,jlisting}
+\RequirePackage{pgf,tikz}
+\RequirePackage{mathrsfs} % 花文字
+\usetikzlibrary{arrows}
+\RequirePackage{tcolorbox}
+\RequirePackage{varwidth}
+
+
+\usetikzlibrary{calc}
+\tcbuselibrary{xparse,hooks,skins,breakable}
+
+\ifmgmd@basic@\relax\else
+\RequirePackage{ascmac}
+\RequirePackage{framed}
+\RequirePackage{makeidx}
+\RequirePackage{multicol}
+\RequirePackage{ulem}% uline, uuline, uwave
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mgm sub-packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\RequirePackage[func,bLA]{mgmmath}
+%\PassOptionsToPackage{func,bLA}{mgmmath}
+
+\RequirePackage{mgm_boxes}
+\RequirePackage{mgm_enumerate}
+\RequirePackage{mgm_listings}
+\RequirePackage{mgm_textformat}
+
+%\ifmgmd@english@
+%\PassOptionsToPackage{english}{mgm_theorems}
+%\PassOptionsToPackage{english}{mgm_reference}
+%\fi
+\RequirePackage[plain,dependent]{mgm_theorems}
+\RequirePackage{mgm_reference}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mathtools settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%when true, references of equations will be displayed only when the labels of them are referred. 
+\mathtoolsset{showonlyrefs=true}
+\newtagform{circled}[\maru]{}{}
+\usetagform{circled}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Line up by year
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newif\ifmgmd@lineup@byyear@
+\mgmd@lineup@byyear@false
+\newcommand{\lineupbyyear}{\mgmd@lineup@byyear@true}
+
+\newlength{\mgmd@ninewidth}
+\settowidth{\mgmd@ninewidth}{9}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Title, part
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\mgmd@time{}
+\def\mgmd@date{}
+\def\mgmd@year{2000}
+\def\mgmd@filebango{6}
+\newif\ifmgmd@showdate@ndtime@
+\mgmd@showdate@ndtime@false
+
+%\newcommand{\fileyear}[1]{\def\mgmd@year{#1}}
+\def\mgmd@filepath{}
+\newcommand{\setmgmfilepath}[1]{\def\mgmd@filepath{#1}}
+\newcommand{\setfileinfo}[2]{\def\mgmd@filepath{../../#1system/#2/}}
+
+\newcommand{\inputfile}[1]{\input{\mgmd@filepath #1}}
+\newcommand{\includegraphicsfile}[2][width=3.5cm]{\includegraphics[#1]{\mgmd@filepath #2}}
+
+\def\mgmd@relax{\relax}
+\def\@maketitle{%
+  \newpage\null
+    {\noindent\LARGE\bfseries \@title \par}%
+    {\large
+      \lineskip .5em
+    }
+    \vskip 1em
+    \ifmgmd@showdate@ndtime@%
+    {\noindent\small \ifx\mgmd@relax\mgmd@date\mgmd@relax\else 試験日\mgmd@date\;\fi%
+	\ifx\mgmd@relax\mgmd@time\mgmd@relax\else 試験時間\mgmd@time\;\fi}\fi%
+  \ifvoid\@abstractbox\else\centerline{\box\@abstractbox}\vskip1.5em\fi
+}
+\def\dateandtime#1#2{\mgmd@showdate@ndtime@true%
+\def\mgmd@date{#1}\def\mgmd@time{#2}}
+
+%%% Question part
+\DeclareTColorBox{questionpart}{}%
+{enhanced jigsaw, breakable, colback=white, colframe=black!50!white, boxrule=2pt, left=1ex}
+
+\newcounter{mondai}
+\newcounter{shomon}[mondai]
+\newcounter{shimon}[shomon]
+
+\newlength{\mgmd@toiwidth}
+
+\def\mgmd@toilabel@normal#1{第{#1}問}
+\def\mgmd@toilabel@linedbyyear#1{\ifnum9<#1\relax20{#1}\else200{#1}\fi 年度}
+\def\mgmd@toilabel#1{%
+\ifmgmd@lineup@byyear@\mgmd@toilabel@linedbyyear{#1}\else\mgmd@toilabel@normal{#1}\fi%
+}
+
+\def\daimon{
+\refstepcounter{mondai}
+\list{}{
+\setlength{\leftmargin}{2ex}
+\setlength{\itemindent}{6ex}
+\setlength{\labelsep}{2.5ex}
+\setlength{\topsep}{5pt}
+}
+\item[{\bfseries \large \mgmd@toilabel{\themondai}}]\relax
+}
+\def\enddaimon{\endlist}
+
+\def\shomon{
+\list{\refstepcounter{shomon}\raisebox{.12ex}{(}\,\theshomon\,\raisebox{.12ex}{)}}{
+\setlength{\leftmargin}{2ex}
+\setlength{\labelsep}{1ex}
+\setlength{\listparindent}{0ex}
+\setlength{\itemindent}{1ex}
+}
+}
+\def\endshomon{\endlist}
+
+%%% Answer part
+\newcounter{kaitou}
+\newcounter{shomonk}[kaitou]
+\newcounter{shimonk}[shomonk]
+
+
+% when you want to make one daimon file
+\newcommand{\daimoncheck}[1]{
+  \setcounter{mondai}{#1}
+  \addtocounter{mondai}{-1}
+  \setcounter{kaitou}{#1}
+  \addtocounter{kaitou}{-1}
+  \def\mgmd@filebango{#1}
+}
+
+
+\newlength{\mgmd@titlewidth}
+
+\def\mgmd@title@colback{\ifmgmd@lineup@byyear@ black!15!white\else black\fi}
+\def\mgmd@title@coltitle{\ifmgmd@lineup@byyear@ black\else white\fi}
+
+
+\long\def\mgmd@kaibox#1#2{%
+\refstepcounter{kaitou}%
+\settowidth{\mgmd@titlewidth}{\thekaitou}%
+\begin{tcolorbox}[blanker,
+title={#1},
+coltitle=\mgmd@title@coltitle,
+attach boxed title to top left={yshift=-\tcboxedtitleheight},
+boxed title style={colback=\mgmd@title@colback},
+%sharp corners,
+%toptitle=1.5ex,bottomtitle=1.5ex,
+before skip=10pt plus 5pt minus 3pt, after skip=5pt plus 2pt minus 2pt,
+left=3.5em]
+#2
+\end{tcolorbox}
+}
+
+\long\def\kaibox#1{%
+\mgmd@kaibox{\,\scalebox{3}{\!\ifdim\mgmd@titlewidth>\mgmd@ninewidth%
+\scalebox{0.75}[1]{\!\thekaitou\!}\else\thekaitou\fi\!}\,}{#1}}
+
+\long\def\kaiboxlinedbyyear#1{%
+\mgmd@kaibox{\,\scalebox{3}{\!\ifdim\mgmd@titlewidth>\mgmd@ninewidth%
+\scalebox{0.75}[1]{\!\thekaitou\!}\else\scalebox{0.75}[1]{\!0\thekaitou\!}\fi\!}\,}{#1}}
+
+\newtcbox{\category}{on line,
+arc=5pt,outer arc=0pt,colback=black!5!white,colframe=black,
+boxsep=1pt,left=4pt,right=4pt,top=2pt,bottom=2pt,
+boxrule=1pt%,bottomrule=1pt,toprule=1pt
+}
+
+\newtcbox{\mgmd@bekkai@box}{on line,
+arc=6pt,outer arc=2pt,colback=black!15!white,colframe=black!60!white,
+boxsep=1pt,left=4pt,right=4pt,top=2pt,bottom=2pt,
+boxrule=.5pt%,bottomrule=1pt,toprule=1pt
+}
+
+\newcommand{\bekkai}{\noindent\mgmd@bekkai@box{別解}\quad}
+
+\newcommand{\kangaekata}{\noindent\mgmd@bekkai@box{考え方}\quad}
+
+\def\mgmd@nanido#1{%
+\ifcase#1\or ★☆☆☆☆\or ★★☆☆☆\or ★★★☆☆%
+\or ★★★★☆\or ★★★★★%
+\or ★★★★★{\large ★}\or ★★★★★{\large ★★彡}\else ？？？？？\fi}
+
+\def\toi#1#2#3{%
+\ifmgmd@lineup@byyear@
+\kaiboxlinedbyyear{\category{#1}【#2】\par
+難易度：\mgmd@nanido{#3}}%
+\else%
+\kaibox{\category{#1}【#2】\par
+難易度：\mgmd@nanido{#3}}%
+\fi%
+}
+
+
+\def\Shomon{
+\refstepcounter{shomonk}
+\noindent\raisebox{.12ex}{(}\,{\bfseries\theshomonk}\,\raisebox{.12ex}{)}\;\;
+}
+\def\Shimon#1{\noindent\raisebox{.12ex}{(}\,{\bfseries #1}\,\raisebox{.12ex}{)}\;\;}
+
+%\def\Shimon{
+%\refstepcounter{shimonk}
+%\noindent\raisebox{.12ex}{(}\,{\bfseries\theshimonk}\,\raisebox{.12ex}{)}\;\;
+%}
+
+%%% other environments
+\DeclareTColorBox{sohyobox}{O{} m}%
+{empty, breakable, left=1mm, right=1mm, bottom=1mm, top=1mm,  attach boxed title to top left, coltitle=black, boxed title style={empty,top=-.5mm,bottom=-.5mm},
+underlay unbroken and first={\fill[black](title.north west) -- ++ (0,-2mm) -- ++ (2mm, 2mm) -- cycle;
+\fill[black](title.south east) -- ++ (0,2mm) -- ++ (-2mm, -2mm) -- cycle;
+\draw[black](title.north west) -- (title.north east);
+\draw[black](title.south west) -- (title.south east);
+\draw[black]([xshift=1mm,yshift=.5mm]title.east) -- ([yshift=.5mm]title.east-|frame.east);
+\draw[gray,thick,dotted]([xshift=1mm,yshift=-.5mm]title.east) -- ([yshift=-.5mm]title.east-|frame.east);},
+underlay unbroken and last={\draw[black]([yshift=-.5mm]frame.south east) -- ([yshift=-.5mm]frame.south west);
+\draw[gray,thick,dotted]([yshift=.5mm]frame.south west) -- ([yshift=.5mm]frame.south east);},
+title={#2},#1}
+
+\newenvironment{sohyo}{\begin{sohyobox}{総評}}{\end{sohyobox}}
+
+\newenvironment{matome}{\begin{sohyobox}{\textgt{まとめ}}}{\end{sohyobox}}
+
+\newenvironment{keiko}{\begin{sohyobox}{{\Large 傾}向と{\Large 対}策}}{\end{sohyobox}}
+
+\newenvironment{shokatu}{
+\begin{sohyobox}{小括}
+\small}{\end{sohyobox}}
+
+
+\DeclareTColorBox{ascolorbox11m}{ o m O{3} O{} }%
+{enhanced, colback=white, colframe=white,
+attach boxed title to top left={xshift=6mm,yshift=-3mm}, fonttitle=\gtfamily,
+boxed title style={empty,left=-2mm,right=-2mm}, coltitle=black,breakable,
+underlay unbroken={\draw[gray!40!white,line width=.5pt]
+       ([yshift=-#3*0.5pt]title.east)--([yshift=-#3*0.5pt]title.east-|frame.east) -- ++ (0pt,#3pt) -- ++ (-#3pt,0pt)
+       -- ([xshift=-#3pt]frame.south east) - ++ (#3pt,0pt) -- ++ (#3pt,#3pt)
+       -- ([yshift=#3pt]frame.south west) - ++ (0pt,-#3pt) -- ++ (#3pt,-#3pt)
+       -- ([xshift=#3pt,yshift=#3*0.5pt]title.west-|frame.west) - ++ (-#3pt,0pt) -- ++ (-#3pt,-#3pt)
+       -- ([yshift=-#3*0.5pt]title.west) ;
+       \draw[black,line width=.5pt]
+       ([yshift=#3*0.5pt]title.east)--([xshift=-#3*2pt,yshift=#3*0.5pt]title.east-|frame.east) -- ++ (0pt,-#3*2pt)
+       --  ++ (#3*2pt,0pt)
+       -- ([yshift=#3*2pt]frame.south east) -- ++ (-#3*2pt,0pt)
+       -- ([xshift=-#3*2pt]frame.south east)
+       -- ([xshift=#3*2pt]frame.south west) -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*2pt]frame.south west)
+       -- ([yshift=-#3*1.5pt]title.west-|frame.west) -- ++ (#3*2pt,0pt)
+       -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*0.5pt]title.west);},
+underlay first={\draw[gray!40!white,line width=.5pt]
+       ([yshift=-#3*0.5pt]title.east)--([yshift=-#3*0.5pt]title.east-|frame.east) -- ++ (0pt,#3pt) -- ++ (-#3pt,0pt)
+       -- ([xshift=-#3pt]frame.south east);
+       \draw[gray!40!white,line width=.5pt]
+       ([xshift=#3pt]frame.south west)
+       -- ([xshift=#3pt,yshift=#3*0.5pt]title.west-|frame.west) - ++ (-#3pt,0pt) -- ++ (-#3pt,-#3pt)
+       -- ([yshift=-#3*0.5pt]title.west) ;
+       \draw[black,line width=.5pt]
+       ([yshift=#3*0.5pt]title.east)--([xshift=-#3*2pt,yshift=#3*0.5pt]title.east-|frame.east)
+       -- ++ (0pt,-#3*2pt)
+       -- ++ (#3*2pt,0pt)
+       -- (frame.south east);
+       \draw[black,line width=.5pt]
+       (frame.south west)
+       -- ([yshift=-#3*1.5pt]title.west-|frame.west) -- ++ (#3*2pt,0pt)
+       -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*0.5pt]title.west);},
+underlay middle={\draw[gray!40!white,line width=.5pt]
+       ([xshift=-#3pt]frame.north east)
+       -- ([xshift=-#3pt]frame.south east);
+       \draw[gray!40!white,line width=.5pt]
+       ([xshift=#3pt]frame.north west)
+       -- ([xshift=#3pt]frame.south west);
+       \draw[black,line width=.5pt]
+       (frame.north east)
+       -- (frame.south east);
+       \draw[black,line width=.5pt]
+       (frame.north west)
+       -- (frame.south west);},
+underlay last={\draw[gray!40!white,line width=.5pt]
+       ([xshift=-#3pt]frame.north east)
+       -- ([xshift=-#3pt]frame.south east) - ++ (#3pt,0pt) -- ++ (#3pt,#3pt)
+       -- ([yshift=#3pt]frame.south west) - ++ (0pt,-#3pt) -- ++ (#3pt,-#3pt)
+       -- ([xshift=#3pt]frame.north west);
+       \draw[black,line width=.5pt]
+       (frame.north east)
+       -- ([yshift=#3*2pt]frame.south east) -- ++ (-#3*2pt,0pt)
+       -- ([xshift=-#3*2pt]frame.south east)
+       -- ([xshift=#3*2pt]frame.south west) -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*2pt]frame.south west)
+       -- (frame.north west);},
+IfValueTF={#1}{title={【#2】〈#1〉}}{title=【#2】},#4}
+
+\newenvironment{opc}[1][\relax]{
+\begin{ascolorbox11m}{$\mathcal{OPC}$\ifx#1\relax{}\else{：#1}\fi}
+\small}{\end{ascolorbox11m}}
+
+\newenvironment{opcheck}[1][\relax]{
+\begin{ascolorbox11m}{$\mathcal{C}$\textit{heck}\ifx#1\relax{}\else{：#1}\fi}
+\small}{\end{ascolorbox11m}}
+
+%\renewcommand{\theequation}{%
+%\thekaitou.\arabic{equation}}
+\@addtoreset{equation}{kaitou}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% formats
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\allowdisplaybreaks
+\setlength{\abovedisplayskip}{10pt} % 上部のマージン
+\setlength{\belowdisplayskip}{2pt} % 下部のマージン
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% other commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\kakko#1{\raisebox{.12ex}{(}\,#1\,\raisebox{.12ex}{)}}
+
+
+\endinput

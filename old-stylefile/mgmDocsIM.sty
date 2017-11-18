@@ -1,0 +1,160 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, November 2016.
+\ProvidesPackage{mgmDocsIM}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifmgmd@basic@
+\newif\ifmgmd@english@
+\newif\ifmgmd@requiremath@
+\mgmd@basic@false
+\mgmd@english@false
+\mgmd@requiremath@false
+\DeclareOption{basic}{\mgmd@basic@true}
+\DeclareOption{english}{\mgmd@english@true}
+\DeclareOption{mgmmath}{\mgmd@requiremath@true}
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% required package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[dvipdfmx]{graphicx}
+%\RequirePackage{wrapfig}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{bm}
+\RequirePackage[dvipdfmx,usenames]{color}
+%black, white, red, green, blue, cyan, magenta, yellow,Purple,Gray
+\RequirePackage{fancyhdr}
+\RequirePackage{enumitem}
+\RequirePackage{mathtools}%mathtoolsset
+\RequirePackage[hdivide={20mm,,20mm}, vdivide={30mm,,30mm}]{geometry}
+\RequirePackage{siunitx}
+\RequirePackage[dvipdfmx]{hyperref}
+\RequirePackage{pxjahyper}
+\RequirePackage{listings,jlisting}
+\RequirePackage{pgf,tikz}
+\RequirePackage{mathrsfs} % 花文字
+\usetikzlibrary{arrows}
+\RequirePackage{tcolorbox}
+\RequirePackage{varwidth}
+
+
+\usetikzlibrary{calc}
+\tcbuselibrary{xparse,hooks,skins,breakable}
+
+\ifmgmd@basic@\relax\else
+\RequirePackage{ascmac}
+\RequirePackage{framed}
+\RequirePackage{makeidx}
+\RequirePackage{multicol}
+\RequirePackage{ulem}% uline, uuline, uwave
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mgm sub-packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifmgmd@requiremath@
+\RequirePackage{mgmmath}
+\fi
+
+\RequirePackage{mgm_boxes}
+\RequirePackage{mgm_enumerate}
+\RequirePackage{mgm_listings}
+\RequirePackage{mgm_textformat}
+
+\ifmgmd@english@
+\PassOptionsToPackage{english}{mgm_theorems}
+\PassOptionsToPackage{english}{mgm_reference}
+\fi
+\RequirePackage[fancy]{mgm_theorems}
+\RequirePackage{mgm_reference}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% title
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\author#1{\def\@author{#1}}
+\def\MoGue{Mo\raise.4ex\hbox{g}ue}
+\def\@author{\MoGue}
+\def\imathtitle#1{\def\imath@title{#1}}
+\def\imathsubtitle#1{\def\imath@subtitle{#1}}
+\def\imathnum#1{\def\imath@num{#1}}
+\def\imathengtitle#1{\def\imath@engtitle{#1}}
+\def\imathgenre#1{\def\imath@genre{#1}}
+\def\imath@genre{基礎数学}
+\def\@title{\imath@title}
+
+\def\@maketitle{
+%\ifx\imath@num\undefined{\def\imath@num{0}}\fi
+\begin{center}
+{\Large\bfseries 【直観数学$\cdot$\imath@genre シリーズ】}\par
+\vspace{6pt}
+{\huge\gtfamily\@title\ifx\imath@num\undefined{}\else{(\imath@num)}\fi}
+\ifx\imath@subtitle\undefined{}\else{\par\vspace{4pt}\Large --- \imath@subtitle\ ---}\fi
+\end{center}
+\begin{flushright}
+{\large \ifx'\@author'\else written by {\mcfamily\@author},\fi\quad \@date\par}
+\end{flushright}
+\hypersetup{pdftitle={\imath@title\ifx\imath@num\undefined{}\else{(\imath@num)}\fi}}
+}
+
+\def\OPC{\ifmmode{\mathcal{OPC}}\else{$\mathcal{OPC}$}\fi}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%header and footer
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\lhead{【直観数学$\cdot$\imath@genre シリーズ】}
+\rhead{\ifx\imath@engtitle\undefined{\imath@title}\else{\imath@engtitle}\fi
+\ifx\imath@num\undefined{}\else{(\imath@num)}\fi%
+%\ifx\imath@subtitle\undefined{}\else{ --- \imath@subtitle}\fi
+}
+\cfoot{-\,\thepage\,-}
+%\rfoot{最上 伸一}
+
+
+%%% fonts
+
+\usepackage[deluxe]{otf}
+\usepackage[ms-hg]{pxchfon}
+%\setlightminchofont[0]{hgrpp1.ttc}%   ― 明朝・細       (\mcfamily\ltseries)
+%\setmediumminchofont[0]{hgrpp1.ttc}%  ― 明朝・中       (\mcfamily\mdseries)
+%\setboldminchofont[0]{hgrpp1.ttc}%    ― 明朝・太       (\mcfamily\bfseries)
+%\setmediumgothicfont[0]{hgrpp1.ttc}%  ― ゴシック・中   (\gtfamily\mdseries)
+%\setboldgothicfont[0]{hgrpp1.ttc}%    ― ゴシック・太   (\gtfamily\bfseries)
+%\setxboldgothicfont[‹番号›]{‹ファイル名›}%   ― ゴシック・極太 (\gtfamily\ebseries)
+%\setmarugothicfont[0]{hgrpp1.ttc}%
+%\setxboldgothicfont[0]{hgrpp1.ttc}%HG創英角ﾎﾟｯﾌﾟ体
+
+%strong or weak text
+\renewcommand{\strong}{\gtfamily\bfseries}
+\newcommand{\Strong}{\gtfamily\ebseries}
+\renewcommand{\weak}{\color{Gray}\mcfamily\ltseries}
+
+%exaggerated text(strong, strong, maybe too strong)
+\renewcommand{\exag}[1]{\textcolor{red}{\gtfamily\mdseries #1}}
+\renewcommand{\Exag}[1]{\textcolor{red}{\mcfamily\bfseries #1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% mathtools settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%when true, references of equations will be displayed only when the labels of them are referred. 
+\mathtoolsset{showonlyrefs=true}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% other commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%English date in Japanese document
+\newcommand{\fulltoday}{\number\day\space \ifcase\month\or
+  January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi
+  \space\number\year}
+
+
+\endinput

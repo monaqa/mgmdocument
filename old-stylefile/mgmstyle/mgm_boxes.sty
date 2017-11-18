@@ -1,0 +1,255 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, July 2016.
+
+\ProvidesPackage{mgm_boxes}
+
+\newif\ifmgmd@beamer@
+\mgmd@beamer@false
+\DeclareOption{beamer}{\mgmd@beamer@true}
+\ProcessOptions\relax
+
+\ifmgmd@beamer@\else
+\RequirePackage[dvipdfmx]{graphicx}
+\RequirePackage[dvipdfmx,usenames]{color}
+\fi
+
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{ascmac}
+\RequirePackage{framed}
+\RequirePackage{pgf,tikz}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{xparse,hooks,skins,breakable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DeclareTColorBox{ascolorbox3}{ m O{black} O{}}%
+{empty, breakable, title={#1},attach boxed title to top left, boxed title style={empty,size=minimal, toprule=2pt, top=4pt,
+underlay ={\draw[#2,line width=3pt]
+         ([yshift=-1.6pt]frame.north west)--([yshift=-1.6pt]frame.north east);}},
+     coltitle=black,fonttitle=\large\bfseries,
+     before=\par\medskip\noindent,parbox=false,boxsep=0pt,left=0pt,right=3mm,top=4pt,
+     breakable,pad at break=0mm,
+underlay unbroken={\draw[#2,line width=1pt]
+       ([yshift=-1pt]title.north east)--([xshift=-0.5pt,yshift=-1pt]title.north-|frame.east)
+       --([xshift=-0.5pt]frame.south east)--(frame.south west) ;
+       \draw[#2,line width=.5pt]
+       ([yshift=-2.5pt]title.north east)--([xshift=-2pt,yshift=-2.5pt]title.north-|frame.east)
+       --([yshift=1.5pt,xshift=-2pt]frame.south east)--([yshift=1.5pt]frame.south west);},
+underlay first={\draw[#2,line width=1pt]
+       ([yshift=-1pt]title.north east)--([xshift=-0.5pt,yshift=-1pt]title.north-|frame.east)
+       --([xshift=-0.5pt]frame.south east) ;
+       \draw[#2,line width=.5pt]
+       ([yshift=-2.5pt]title.north east)--([xshift=-2pt,yshift=-2.5pt]title.north-|frame.east)
+       --([xshift=-2pt]frame.south east) ;},
+underlay middle={\draw[#2,line width=1pt]
+       ([xshift=-0.5pt]frame.north east)
+       --([xshift=-0.5pt]frame.south east) ;
+       \draw[#2,line width=.5pt]
+       ([xshift=-2pt]frame.north east)
+       --([xshift=-2pt]frame.south east);},
+underlay last={\draw[#2,line width=1pt]
+       ([xshift=-0.5pt]frame.north east)
+       --([xshift=-0.5pt]frame.south east)--(frame.south west) ;
+       \draw[#2,line width=.5pt]
+       ([xshift=-2pt]frame.north east)
+       --([yshift=1.5pt,xshift=-2pt]frame.south east)--([yshift=1.5pt]frame.south west);}, 
+#3}
+
+\DeclareTColorBox{ascolorbox10}{ o m O{.8} O{} }%
+{enhanced, interior hidden, colframe=white,
+attach boxed title to top left={xshift=6mm,yshift*=-1.5mm}, fonttitle=\gtfamily, coltitle=black, 
+, left=1mm, right=1mm,breakable,top=0mm,
+boxed title style={empty,left=-2mm,right=-2mm}, 
+underlay unbroken={\draw[black!40!white,line width=1pt, dotted]
+       ([xshift=3pt,yshift=-3pt]title.east) -- ([yshift=-3pt]title.east-|frame.east);
+       \draw[black,line width=#3pt]
+       (title.east) -- (title.east-|frame.east);
+       \draw[black!40!white,line width=1pt, dotted]
+       ([xshift=-3pt,yshift=-3pt]title.west) -- ([yshift=-3pt]title.west-|frame.west);
+       \draw[black,line width=#3pt]
+       (title.west) -- (title.west-|frame.west);
+       \draw[black,line width=#3pt]
+       (frame.south west) -- (frame.south east);
+       \draw[black!40!white,line width=1pt, dotted]
+       ([yshift=3pt]frame.south west) -- ([yshift=3pt]frame.south east);
+       },
+underlay first={\draw[black!40!white,line width=1pt, dotted]
+       ([xshift=3pt,yshift=-3pt]title.east) -- ([yshift=-3pt]title.east-|frame.east);
+       \draw[black,line width=#3pt]
+       (title.east) -- (title.east-|frame.east);
+       \draw[black!40!white,line width=1pt, dotted]
+       ([xshift=-3pt,yshift=-3pt]title.west) -- ([yshift=-3pt]title.west-|frame.west);
+       \draw[black,line width=#3pt]
+       (title.west) -- (title.west-|frame.west);},
+underlay last={\draw[black,line width=#3pt]
+       (frame.south west) -- (frame.south east);
+       \draw[black!40!white,line width=1pt, dotted]
+       ([yshift=3pt]frame.south west) -- ([yshift=3pt]frame.south east);
+       },
+IfValueTF={#1}{title=【#2】〈#1〉}{title=【#2】},#4}
+
+\DeclareTColorBox{ascolorbox11}{ o m O{4} O{} }%
+{enhanced, colback=white, colframe=white,
+attach boxed title to top left={xshift=1cm,yshift=-3mm}, fonttitle=\gtfamily,
+boxed title style={empty,left=-2mm,right=-2mm}, coltitle=black,breakable,
+underlay unbroken={\draw[gray!40!white,line width=.5pt]
+       ([yshift=-#3*0.5pt]title.east)--([yshift=-#3*0.5pt]title.east-|frame.east) -- ++ (0pt,#3pt) -- ++ (-#3pt,0pt)
+       -- ([xshift=-#3pt]frame.south east) - ++ (#3pt,0pt) -- ++ (#3pt,#3pt)
+       -- ([yshift=#3pt]frame.south west) - ++ (0pt,-#3pt) -- ++ (#3pt,-#3pt)
+       -- ([xshift=#3pt,yshift=#3*0.5pt]title.west-|frame.west) - ++ (-#3pt,0pt) -- ++ (-#3pt,-#3pt)
+       -- ([yshift=-#3*0.5pt]title.west) ;
+       \draw[black,line width=.5pt]
+       ([yshift=#3*0.5pt]title.east)--([xshift=-#3*2pt,yshift=#3*0.5pt]title.east-|frame.east) -- ++ (0pt,-#3*2pt)
+       --  ++ (#3*2pt,0pt)
+       -- ([yshift=#3*2pt]frame.south east) -- ++ (-#3*2pt,0pt)
+       -- ([xshift=-#3*2pt]frame.south east)
+       -- ([xshift=#3*2pt]frame.south west) -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*2pt]frame.south west)
+       -- ([yshift=-#3*1.5pt]title.west-|frame.west) -- ++ (#3*2pt,0pt)
+       -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*0.5pt]title.west);},
+underlay first={\draw[gray!40!white,line width=.5pt]
+       ([yshift=-#3*0.5pt]title.east)--([yshift=-#3*0.5pt]title.east-|frame.east) -- ++ (0pt,#3pt) -- ++ (-#3pt,0pt)
+       -- ([xshift=-#3pt]frame.south east);
+       \draw[gray!40!white,line width=.5pt]
+       ([xshift=#3pt]frame.south west)
+       -- ([xshift=#3pt,yshift=#3*0.5pt]title.west-|frame.west) - ++ (-#3pt,0pt) -- ++ (-#3pt,-#3pt)
+       -- ([yshift=-#3*0.5pt]title.west) ;
+       \draw[black,line width=.5pt]
+       ([yshift=#3*0.5pt]title.east)--([xshift=-#3*2pt,yshift=#3*0.5pt]title.east-|frame.east)
+       -- ++ (0pt,-#3*2pt)
+       -- ++ (#3*2pt,0pt)
+       -- (frame.south east);
+       \draw[black,line width=.5pt]
+       (frame.south west)
+       -- ([yshift=-#3*1.5pt]title.west-|frame.west) -- ++ (#3*2pt,0pt)
+       -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*0.5pt]title.west);},
+underlay middle={\draw[gray!40!white,line width=.5pt]
+       ([xshift=-#3pt]frame.north east)
+       -- ([xshift=-#3pt]frame.south east);
+       \draw[gray!40!white,line width=.5pt]
+       ([xshift=#3pt]frame.north west)
+       -- ([xshift=#3pt]frame.south west);
+       \draw[black,line width=.5pt]
+       (frame.north east)
+       -- (frame.south east);
+       \draw[black,line width=.5pt]
+       (frame.north west)
+       -- (frame.south west);},
+underlay last={\draw[gray!40!white,line width=.5pt]
+       ([xshift=-#3pt]frame.north east)
+       -- ([xshift=-#3pt]frame.south east) - ++ (#3pt,0pt) -- ++ (#3pt,#3pt)
+       -- ([yshift=#3pt]frame.south west) - ++ (0pt,-#3pt) -- ++ (#3pt,-#3pt)
+       -- ([xshift=#3pt]frame.north west);
+       \draw[black,line width=.5pt]
+       (frame.north east)
+       -- ([yshift=#3*2pt]frame.south east) -- ++ (-#3*2pt,0pt)
+       -- ([xshift=-#3*2pt]frame.south east)
+       -- ([xshift=#3*2pt]frame.south west) -- ++ (0pt,#3*2pt)
+       -- ([yshift=#3*2pt]frame.south west)
+       -- (frame.north west);},
+IfValueTF={#1}{title={【#2】〈#1〉}}{title=【#2】},#4}
+
+\DeclareTColorBox{ascolorbox16}{ o m O{} }%
+{empty, breakable, left=1mm, right=1mm, bottom=1mm, top=1mm,  attach boxed title to top left, coltitle=black, boxed title style={empty,top=-.5mm,bottom=-.5mm},
+underlay unbroken and first={\fill[black](title.north west) -- ++ (0,-2mm) -- ++ (2mm, 2mm) -- cycle;
+\fill[black](title.south east) -- ++ (0,2mm) -- ++ (-2mm, -2mm) -- cycle;
+\draw[black](title.north west) -- (title.north east);
+\draw[black](title.south west) -- (title.south east);
+\draw[black]([xshift=1mm,yshift=.5mm]title.east) -- ([yshift=.5mm]title.east-|frame.east);
+\draw[gray,thick,dotted]([xshift=1mm,yshift=-.5mm]title.east) -- ([yshift=-.5mm]title.east-|frame.east);},
+underlay unbroken and last={\draw[black]([yshift=-.5mm]frame.south east) -- ([yshift=-.5mm]frame.south west);
+\draw[gray,thick,dotted]([yshift=.5mm]frame.south west) -- ([yshift=.5mm]frame.south east);},
+IfValueTF={#1}{title={#2〈#1〉}}{title=#2},#3}
+
+\DeclareTColorBox{ascolorbox10m}{ O{} m O{1.5} O{} }%
+{enhanced, interior hidden, colframe=white,
+attach boxed title to top left={xshift=6mm,yshift*=-1.5mm}, fonttitle=\gtfamily, coltitle=black, 
+, left=1mm, right=1mm,breakable,top=1mm,
+boxed title style={colframe=black, colback=white, left=1mm,right=0mm,bottom=-0.1mm}, 
+underlay unbroken={\draw[black!40!white,line width=1pt]
+       ([xshift=3pt,yshift=-3pt]title.east) -- ([yshift=-3pt]title.east-|frame.east);
+       \draw[black,line width=#3pt]
+       (title.east) -- (title.east-|frame.east);
+       \draw[black!40!white,line width=1pt]
+       ([xshift=-3pt,yshift=-3pt]title.west) -- ([yshift=-3pt]title.west-|frame.west);
+       \draw[black,line width=#3pt]
+       (title.west) -- (title.west-|frame.west);
+       \draw[black,line width=#3pt]
+       (frame.south west) -- (frame.south east);
+       \draw[black!40!white,line width=1pt]
+       ([yshift=3pt]frame.south west) -- ([yshift=3pt]frame.south east);
+       },
+underlay first={\draw[black!40!white,line width=1pt]
+       ([xshift=3pt,yshift=-3pt]title.east) -- ([yshift=-3pt]title.east-|frame.east);
+       \draw[black,line width=#3pt]
+       (title.east) -- (title.east-|frame.east);
+       \draw[black!40!white,line width=1pt]
+       ([xshift=-3pt,yshift=-3pt]title.west) -- ([yshift=-3pt]title.west-|frame.west);
+       \draw[black,line width=#3pt]
+       (title.west) -- (title.west-|frame.west);},
+underlay last={\draw[black,line width=#3pt]
+       (frame.south west) -- (frame.south east);
+       \draw[black!40!white,line width=1pt]
+       ([yshift=3pt]frame.south west) -- ([yshift=3pt]frame.south east);
+       },
+segmentation code={\draw[black!50!white, line width=1pt, dashed]
+	([xshift=0.5ex]segmentation.west) -- ([xshift=-0.5ex]segmentation.east);
+},
+IfValueTF={#1}{title=#2}{title=#2},#4}
+
+\DeclareTColorBox{colorboxthm}{ O{black} m O{1.5} O{} }%
+{enhanced, interior hidden, colframe=white,
+attach boxed title to top left={xshift=0mm,yshift*=-\tcboxedtitleheight}, fonttitle=\gtfamily, coltitle=black, 
+, left=1mm, right=1mm,breakable,top=1mm,
+boxed title style={boxrule=0pt, colframe=white,left=1mm,right=0mm,bottom=-0.1mm,colback=white, 
+}, 
+underlay unbroken={\draw[#1,line width=#3pt]
+       (frame.north west) -- (frame.south west);
+       \draw[black,line width=#3pt]
+       (frame.north east) -- (frame.south east);
+	\fill[left color=#1,right color=white]
+	(title.south west) -- ++ (\tcboxedtitlewidth,0mm) -- ++ (0pt,-#3pt) -- ++ (-\tcboxedtitlewidth,0mm) -- cycle;
+       },
+underlay first={\draw[#1,line width=#3pt]
+       (frame.north west) -- (frame.south west);
+       \draw[#1,line width=#3pt]
+       (frame.north east) -- (frame.south east);
+	\fill[left color=#1,right color=white]
+	(title.south west) -- ++ (\tcboxedtitlewidth,0mm) -- ++ (0pt,-#3pt) -- ++ (-\tcboxedtitlewidth,0mm) -- cycle;},
+underlay middle={\draw[#1,line width=#3pt]
+       (frame.north west) -- (frame.south west);
+       \draw[#1,line width=#3pt]
+       (frame.north east) -- (frame.south east);},
+underlay last={\draw[#1,line width=#3pt]
+       (frame.north west) -- (frame.south west);
+       \draw[#1,line width=#3pt]
+       (frame.north east) -- (frame.south east);},
+title=#2,#4}
+
+\DeclareTColorBox{ascolorbox8m}{m O{} }%
+{enhanced,colframe=black,colback=white,coltitle=black, fonttitle=\bfseries,breakable,
+underlay unbroken={\begin{tcbclipinterior}
+       \shade[inner color=black!50!white,outer color=white]
+         (interior.north west) circle (2.5cm);
+       \draw[help lines,step=5mm,white!90!black,shift={(interior.north west)}]
+         (interior.south west) grid (interior.north east);
+         \end{tcbclipinterior}}, 
+underlay first={\begin{tcbclipinterior}
+       \shade[inner color=black!50!white,outer color=white]
+         (interior.north west) circle (2.5cm);
+        \draw[help lines,step=5mm,white!90!black,shift={(interior.north west)}]
+        (interior.south west) grid (interior.north east);
+        \end{tcbclipinterior}}, 
+underlay last={\begin{tcbclipinterior}
+        \draw[help lines,step=5mm,white!90!black,shift={(interior.north west)}]
+        (interior.south west) grid (interior.north east);
+        \end{tcbclipinterior}}, title={#1},
+attach title to upper=\quad, #2
+}
+
+\endinput

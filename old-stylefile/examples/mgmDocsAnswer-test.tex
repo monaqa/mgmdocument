@@ -1,0 +1,43 @@
+\documentclass{jsarticle}
+
+\usepackage[bLA]{mgmmath}
+\usepackage{mgmDocsAnswer}
+
+\title{mgmDocument.sty test}
+\dateandtime{\today}{120分}
+
+\begin{document}
+\maketitle
+
+mgmDocsAnswer.sty のテスト．解答を書くためのスタイルファイルです．
+
+\begin{questionpart}
+\begin{daimon}
+以下の問いに答えよ．
+\begin{shomon}
+\item $A$は$2\times 2$行列であるとする．$A$の成分はいくつあるか．
+\end{shomon}
+\end{daimon}
+\end{questionpart}
+
+\begin{multicols}{2}
+
+\toi{線形代数}{固有値}{2}
+\Shomon
+こんな風に書いていきます．
+4つです．
+
+\setcounter{kaitou}{9}
+\toi{微分方程式}{変分法}{4}
+
+
+\begin{opcheck}{たとえば}
+こんな風にチェックすべきことを途中挿入することもできます．
+\end{opcheck}
+
+\begin{matome}
+最後にはまとめを書くといいでしょう．
+\end{matome}
+
+\end{multicols}
+\end{document}

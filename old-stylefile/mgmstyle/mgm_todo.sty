@@ -1,0 +1,42 @@
+\NeedsTeXFormat{LaTeX2e}
+%
+% Created by Shin-ichi Mogami, December 2016.
+
+\ProvidesPackage{mgm_todo}
+
+\newif\ifmgmd@usetodo@
+
+\def\useTODO{\mgmd@usetodo@true
+	\begingroup\makeatletter
+	\if@filesw\newwrite\mgm@todo\relax
+	\immediate\openout\mgm@todo\jobname.mgmtodo\relax\fi
+	\global\@nobreakfalse\endgroup
+	\let\oldenddocument=\enddocument
+	\def\enddocument{%
+		\if@filesw\immediate\closeout\mgm@todo\fi
+		\begin{oframed}
+		\begin{itemize}
+		\item[] 【未完了 ToDo】
+		\input{\jobname.mgmtodo}\end{itemize}
+		\end{oframed}
+		\makeatother
+		\oldenddocument
+	}
+}
+\def\todomark{\colorbox{black}{\textcolor{yellow}{{\large TODO}}}}
+\def\todofamily{\color{red}}
+\def\todocolon{：}
+
+\long\def\TODO#1{%
+\ifmgmd@usetodo@
+\if@filesw\immediate\write\mgm@todo{\string\item\relax P.\thepage\ \protect{#1}}\fi
+\todomark\todocolon{\todofamily #1}%
+\fi}
+
+\newenvironment{TODOlist}
+{\begingroup\begin{oframed}\todomark
+\let\todomark\relax\let\todofamily\relax\let\todocolon\relax\begin{itemize}}
+{\end{itemize}\end{oframed}\endgroup}
+
+
+\endinput
